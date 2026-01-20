@@ -1,0 +1,220 @@
+{
+  "variants": {
+    "facing=north,half=bottom,shape=straight": {
+      "model": "millenaire:block/stairs_ochre",
+      "y": 0
+    },
+    "facing=north,half=bottom,shape=inner_left": {
+      "model": "millenaire:block/stairs_ochre_inner",
+      "y": 0,
+      "uvlock": true
+    },
+    "facing=north,half=bottom,shape=inner_right": {
+      "model": "millenaire:block/stairs_ochre_inner",
+      "y": 0,
+      "uvlock": true
+    },
+    "facing=north,half=bottom,shape=outer_left": {
+      "model": "millenaire:block/stairs_ochre_outer",
+      "y": 0,
+      "uvlock": true
+    },
+    "facing=north,half=bottom,shape=outer_right": {
+      "model": "millenaire:block/stairs_ochre_outer",
+      "y": 0,
+      "uvlock": true
+    },
+    "facing=north,half=top,shape=straight": {
+      "model": "millenaire:block/stairs_ochre",
+      "y": 0,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=north,half=top,shape=inner_left": {
+      "model": "millenaire:block/stairs_ochre_inner",
+      "y": 0,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=north,half=top,shape=inner_right": {
+      "model": "millenaire:block/stairs_ochre_inner",
+      "y": 0,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=north,half=top,shape=outer_left": {
+      "model": "millenaire:block/stairs_ochre_outer",
+      "y": 0,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=north,half=top,shape=outer_right": {
+      "model": "millenaire:block/stairs_ochre_outer",
+      "y": 0,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=east,half=bottom,shape=straight": {
+      "model": "millenaire:block/stairs_ochre",
+      "y": 90
+    },
+    "facing=east,half=bottom,shape=inner_left": {
+      "model": "millenaire:block/stairs_ochre_inner",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=east,half=bottom,shape=inner_right": {
+      "model": "millenaire:block/stairs_ochre_inner",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=east,half=bottom,shape=outer_left": {
+      "model": "millenaire:block/stairs_ochre_outer",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=east,half=bottom,shape=outer_right": {
+      "model": "millenaire:block/stairs_ochre_outer",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=east,half=top,shape=straight": {
+      "model": "millenaire:block/stairs_ochre",
+      "y": 90,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=east,half=top,shape=inner_left": {
+      "model": "millenaire:block/stairs_ochre_inner",
+      "y": 90,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=east,half=top,shape=inner_right": {
+      "model": "millenaire:block/stairs_ochre_inner",
+      "y": 90,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=east,half=top,shape=outer_left": {
+      "model": "millenaire:block/stairs_ochre_outer",
+      "y": 90,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=east,half=top,shape=outer_right": {
+      "model": "millenaire:block/stairs_ochre_outer",
+      "y": 90,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=south,half=bottom,shape=straight": {
+      "model": "millenaire:block/stairs_ochre",
+      "y": 180
+    },
+    "facing=south,half=bottom,shape=inner_left": {
+      "model": "millenaire:block/stairs_ochre_inner",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=south,half=bottom,shape=inner_right": {
+      "model": "millenaire:block/stairs_ochre_inner",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=south,half=bottom,shape=outer_left": {
+      "model": "millenaire:block/stairs_ochre_outer",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=south,half=bottom,shape=outer_right": {
+      "model": "millenaire:block/stairs_ochre_outer",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=south,half=top,shape=straight": {
+      "model": "millenaire:block/stairs_ochre",
+      "y": 180,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=south,half=top,shape=inner_left": {
+      "model": "millenaire:block/stairs_ochre_inner",
+      "y": 180,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=south,half=top,shape=inner_right": {
+      "model": "millenaire:block/stairs_ochre_inner",
+      "y": 180,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=south,half=top,shape=outer_left": {
+      "model": "millenaire:block/stairs_ochre_outer",
+      "y": 180,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=south,half=top,shape=outer_right": {
+      "model": "millenaire:block/stairs_ochre_outer",
+      "y": 180,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=west,half=bottom,shape=straight": {
+      "model": "millenaire:block/stairs_ochre",
+      "y": 270
+    },
+    "facing=west,half=bottom,shape=inner_left": {
+      "model": "millenaire:block/stairs_ochre_inner",
+      "y": 270,
+      "uvlock": true
+    },
+    "facing=west,half=bottom,shape=inner_right": {
+      "model": "millenaire:block/stairs_ochre_inner",
+      "y": 270,
+      "uvlock": true
+    },
+    "facing=west,half=bottom,shape=outer_left": {
+      "model": "millenaire:block/stairs_ochre_outer",
+      "y": 270,
+      "uvlock": true
+    },
+    "facing=west,half=bottom,shape=outer_right": {
+      "model": "millenaire:block/stairs_ochre_outer",
+      "y": 270,
+      "uvlock": true
+    },
+    "facing=west,half=top,shape=straight": {
+      "model": "millenaire:block/stairs_ochre",
+      "y": 270,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=west,half=top,shape=inner_left": {
+      "model": "millenaire:block/stairs_ochre_inner",
+      "y": 270,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=west,half=top,shape=inner_right": {
+      "model": "millenaire:block/stairs_ochre_inner",
+      "y": 270,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=west,half=top,shape=outer_left": {
+      "model": "millenaire:block/stairs_ochre_outer",
+      "y": 270,
+      "x": 180,
+      "uvlock": true
+    },
+    "facing=west,half=top,shape=outer_right": {
+      "model": "millenaire:block/stairs_ochre_outer",
+      "y": 270,
+      "x": 180,
+      "uvlock": true
+    }
+  }
+}

@@ -1,0 +1,208 @@
+package org.millenaire.common.buildingplan;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.imageio.ImageIO;
+import org.millenaire.common.config.MillConfigValues;
+import org.millenaire.common.utilities.MillCommonUtilities;
+import org.millenaire.common.utilities.MillLog;
+
+/**
+ * Development utilities for building plan documentation and debugging.
+ * Generates color sheets, resource lists, and wiki tables.
+ * Ported from 1.12.2 to 1.20.1.
+ * 
+ * NOTE: Full functionality requires complete Culture and BuildingPlanSet
+ * implementations.
+ * Some methods are stubbed pending full port.
+ */
+public class BuildingDevUtilities {
+    private static final String EOL = "\n";
+
+    /**
+     * Generate a color sheet image showing all PointType colors.
+     * Useful for debugging PNG building plan loading.
+     */
+    public static void generateColourSheet() {
+        try {
+            if (MillConfigValues.LogBuildingPlan >= 1) {
+                MillLog.major(null, "Generating colour sheet.");
+            }
+
+            int colorCount = PointType.colourPoints != null ? PointType.colourPoints.size() : 20;
+            BufferedImage pict = new BufferedImage(200, colorCount * 20 + 25, BufferedImage.TYPE_INT_RGB);
+            Graphics2D graphics = pict.createGraphics();
+
+            // White background
+            graphics.setColor(new Color(0xFFFFFF));
+            graphics.fillRect(0, 0, pict.getWidth(), pict.getHeight());
+
+            // Title
+            graphics.setColor(new Color(0x000000));
+            graphics.drawString("Generated colour sheet.", 5, 20);
+
+            int pos = 1;
+
+            // Load and parse blocklist.txt for colors
+            File blocklistFile = new File(MillCommonUtilities.getMillenaireContentDir(), "blocklist.txt");
+            if (blocklistFile.exists()) {
+                pos = generateColourSheetHandleFile(graphics, pos, blocklistFile);
+            }
+
+            // Save the image
+            File outputFile = new File(MillCommonUtilities.getMillenaireContentDir(), "Colour Sheet.png");
+            try {
+                ImageIO.write(pict, "png", outputFile);
+            } catch (Exception e) {
+                MillLog.printException(e);
+            }
+
+            if (MillConfigValues.LogBuildingPlan >= 1) {
+                MillLog.major(null, "Finished generating colour sheet at: " + outputFile.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            MillLog.printException("Exception when trying to generate Colour Sheet:", e);
+        }
+    }
+
+    /**
+     * Parse a blocklist file and add color rectangles to the graphics.
+     */
+    private static int generateColourSheetHandleFile(Graphics2D graphics, int pos, File file) {
+        try {
+            BufferedReader reader = MillCommonUtilities.getReader(file);
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().length() > 0 && !line.startsWith("//")) {
+                    String[] params = line.split(";", -1);
+                    if (params.length >= 5) {
+                        String[] rgb = params[4].split("/", -1);
+                        if (rgb.length == 3) {
+                            try {
+                                int colour = (Integer.parseInt(rgb[0].trim()) << 16)
+                                        + (Integer.parseInt(rgb[1].trim()) << 8)
+                                        + Integer.parseInt(rgb[2].trim());
+
+                                // Draw block name
+                                graphics.setColor(new Color(0x000000));
+                                graphics.drawString(params[0], 20, 17 + 20 * pos);
+
+                                // Draw color swatch
+                                graphics.setColor(new Color(colour));
+                                graphics.fillRect(0, 5 + 20 * pos, 15, 15);
+
+                                pos++;
+                            } catch (NumberFormatException e) {
+                                // Skip invalid color entries
+                            }
+                        }
+                    }
+                }
+            }
+            reader.close();
+        } catch (Exception e) {
+            MillLog.printException(e);
+        }
+
+        return pos;
+    }
+
+    /**
+     * Generate a resource usage report for all cultures.
+     * Lists what blocks are used by each building plan.
+     */
+    public static void generateBuildingRes() {
+        File file = new File(MillCommonUtilities.getMillenaireCustomContentDir(), "resources used.txt");
+
+        try {
+            BufferedWriter writer = MillCommonUtilities.getWriter(file);
+            writer.write("// Building resource usage report\n");
+            writer.write("// Generated by Millenaire\n\n");
+
+            // TODO: Iterate cultures and building plans when fully ported
+            writer.write("Resource report generation requires full Culture port.\n");
+
+            writer.close();
+        } catch (Exception e) {
+            MillLog.printException(e);
+        }
+
+        if (MillConfigValues.LogBuildingPlan >= 1) {
+            MillLog.major(null, "Wrote resources used.txt");
+        }
+    }
+
+    /**
+     * Export missing travel book descriptions for translation.
+     */
+    public static void exportMissingTravelBookDesc() {
+        // TODO: Implement when Culture and VillagerType are fully ported
+        MillLog.minor(null, "exportMissingTravelBookDesc: Requires full Culture port");
+    }
+
+    /**
+     * Export travel book descriptions as CSV for translation.
+     */
+    public static void exportTravelBookDescCSV() {
+        // TODO: Implement when Culture and VillagerType are fully ported
+        MillLog.minor(null, "exportTravelBookDescCSV: Requires full Culture port");
+    }
+
+    /**
+     * Generate wiki-format tables for building requirements.
+     */
+    public static void generateWikiTable() {
+        File file = new File(MillCommonUtilities.getMillenaireCustomContentDir(), "resources used wiki.txt");
+
+        try {
+            BufferedWriter writer = MillCommonUtilities.getWriter(file);
+            writer.write("// Wiki table generation\n");
+            writer.write("// Requires full BuildingPlanSet port\n\n");
+
+            // TODO: Generate wiki tables when BuildingPlanSet is fully ported
+
+            writer.close();
+        } catch (IOException e) {
+            MillLog.printException(e);
+        }
+
+        if (MillConfigValues.LogBuildingPlan >= 1) {
+            MillLog.major(null, "Wrote resources used wiki.txt");
+        }
+    }
+
+    /**
+     * Write building plan cost in text format.
+     */
+    public static void writePlanCostTextStyle(BuildingPlanSet set, BufferedWriter writer) throws IOException {
+        BuildingPlan firstPlan = set.getFirstStartingPlan();
+        if (firstPlan != null) {
+            writer.write(firstPlan.nativeName + EOL);
+            writer.write(firstPlan.buildingKey + EOL + EOL);
+        }
+
+        // TODO: Full cost breakdown when BuildingPlan.resCost is available
+    }
+
+    /**
+     * Write building plan cost in wiki format.
+     */
+    public static void writePlanCostWikiStyle(BuildingPlanSet set, BufferedWriter writer) throws IOException {
+        BuildingPlan firstPlan = set.getFirstStartingPlan();
+        if (firstPlan != null) {
+            writer.write(firstPlan.nativeName + EOL);
+            writer.write(firstPlan.buildingKey + EOL + EOL);
+            writer.write("==Requirements==" + EOL);
+        }
+
+        // TODO: Full cost wiki table when BuildingPlan.resCost is available
+    }
+}

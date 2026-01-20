@@ -1,0 +1,5 @@
+// Colors from color sheet that were missing from blocklist.txt
+// Add these to blocklist.txt
+
+stairsPaintedBrickOrangeRight;minecraft:brick_block;0;false;115/0/0
+BM trandoorUpnerEastOpen;minecraft:wooden_door;0;false;200/200/120

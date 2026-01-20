@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "millenaire:block/stone",
+    "top": "millenaire:block/stone",
+    "side": "millenaire:block/stone"
+  }
+}

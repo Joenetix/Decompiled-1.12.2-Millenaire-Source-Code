@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "millenaire:block/pathsandstone",
+    "top": "millenaire:block/pathsandstone",
+    "side": "millenaire:block/pathsandstone_side"
+  }
+}

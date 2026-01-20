@@ -1,0 +1,7 @@
+{
+    "parent": "minecraft:block/iron_bars_side",
+    "textures": {
+        "bars": "millenaire:block/wooden_bars_rosette_topleft",
+        "edge": "millenaire:block/wooden_bars_rosette_topleft"
+    }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "millenaire:block/red_tiles_0",
+    "top": "millenaire:block/red_tiles_0",
+    "side": "millenaire:block/red_tiles_0"
+  }
+}

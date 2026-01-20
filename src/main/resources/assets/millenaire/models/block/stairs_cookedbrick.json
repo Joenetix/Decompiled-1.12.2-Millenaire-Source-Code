@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "millenaire:block/cookedbrick",
+    "top": "millenaire:block/cookedbrick",
+    "side": "millenaire:block/cookedbrick"
+  }
+}

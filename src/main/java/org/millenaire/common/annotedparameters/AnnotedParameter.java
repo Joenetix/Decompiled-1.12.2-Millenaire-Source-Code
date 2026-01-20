@@ -1,0 +1,212 @@
+package org.millenaire.common.annotedparameters;
+
+import java.lang.reflect.Field;
+import org.millenaire.common.utilities.MillLog;
+import org.millenaire.common.utilities.Point;
+import org.millenaire.common.culture.Culture;
+import org.millenaire.common.item.InvItem;
+import org.millenaire.common.village.Building;
+import org.millenaire.common.village.BuildingResManager;
+
+/**
+ * Represents a configuration parameter annotated with @ConfigField.
+ * Handles parsing values from config files and applying them to target objects.
+ * Ported from 1.12.2 to 1.20.1.
+ */
+public class AnnotedParameter {
+    Field field;
+    public final ParameterType type;
+    public final String explanation;
+    public final String explanationCategory;
+    public final String configName;
+    public final String defaultValueString;
+
+    public AnnotedParameter(Field field) {
+        this.field = field;
+        String configName = field.getAnnotation(ConfigAnnotations.ConfigField.class).paramName().toLowerCase();
+        if (configName.length() == 0) {
+            configName = field.getName().toLowerCase();
+        }
+
+        this.configName = configName;
+        this.type = field.getAnnotation(ConfigAnnotations.ConfigField.class).type();
+        String defaultValueString = field.getAnnotation(ConfigAnnotations.ConfigField.class).defaultValue();
+        if (defaultValueString.length() > 0) {
+            this.defaultValueString = defaultValueString;
+        } else {
+            this.defaultValueString = null;
+        }
+
+        if (field.isAnnotationPresent(ConfigAnnotations.FieldDocumentation.class)) {
+            String explanation = field.getAnnotation(ConfigAnnotations.FieldDocumentation.class).explanation();
+            if (explanation.length() > 0) {
+                this.explanation = explanation;
+            } else {
+                this.explanation = null;
+            }
+
+            String explanationCategory = field.getAnnotation(ConfigAnnotations.FieldDocumentation.class)
+                    .explanationCategory();
+            if (explanationCategory.length() == 0) {
+                this.explanationCategory = explanationCategory;
+            } else {
+                this.explanationCategory = null;
+            }
+        } else {
+            this.explanation = null;
+            this.explanationCategory = null;
+        }
+    }
+
+    public void parseValue(Culture culture, Object targetClass, String value) {
+        value = value.trim();
+
+        try {
+            if (this.type.io.useCulture()) {
+                this.type.io.readValueCulture(culture, targetClass, this.field, value);
+            } else {
+                this.type.io.readValue(targetClass, this.field, value);
+            }
+        } catch (MillLog.MillenaireException e) {
+            MillLog.error(null, targetClass.toString() + ": Error when reading value '" + value + "' for parameter "
+                    + this.configName + ": " + e.getMessage());
+        } catch (Exception e) {
+            MillLog.printException(targetClass.toString() + ": Error when reading value '" + value + "' for parameter "
+                    + this.configName + ": ", e);
+        }
+    }
+
+    /**
+     * Represents a bonus item with chance and optional tag.
+     */
+    public static class BonusItem {
+        public final InvItem item;
+        public final int chance;
+        public final String tag;
+
+        public BonusItem(InvItem item, int chance) {
+            this.item = item;
+            this.chance = chance;
+            this.tag = null;
+        }
+
+        public BonusItem(InvItem item, int chance, String tag) {
+            this.item = item;
+            this.chance = chance;
+            this.tag = tag;
+        }
+    }
+
+    /**
+     * All supported parameter types with their corresponding I/O handlers.
+     */
+    public static enum ParameterType {
+        STRING(new ValueIO.StringIO()),
+        STRINGDISPLAY(new ValueIO.StringDisplayIO()),
+        STRING_LIST(new ValueIO.StringListIO()),
+        STRING_ADD(new ValueIO.StringAddIO()),
+        STRING_INVITEM_ADD(new ValueIO.StringInvItemAddIO()),
+        STRING_CASE_SENSITIVE_ADD(new ValueIO.StringCaseSensitiveAddIO()),
+        STRING_INTEGER_ADD(new ValueIO.StringNumberAddIO()),
+        TRANSLATED_STRING_ADD(new ValueIO.TranslatedStringAddIO()),
+        BOOLEAN(new ValueIO.BooleanIO()),
+        INTEGER(new ValueIO.IntegerIO()),
+        INTEGER_ARRAY(new ValueIO.IntegerArrayIO()),
+        FLOAT(new ValueIO.FloatIO()),
+        RESOURCE_LOCATION(new ValueIO.ResourceLocationIO()),
+        MILLISECONDS(new ValueIO.MillisecondsIO()),
+        INVITEM(new ValueIO.InvItemIO()),
+        ITEMSTACK_ARRAY(new ValueIO.ItemStackArrayIO()),
+        INVITEM_ADD(new ValueIO.InvItemAddIO()),
+        INVITEM_PAIR(new ValueIO.InvItemPairIO()),
+        INVITEM_NUMBER_ADD(new ValueIO.InvItemNumberAddIO()),
+        INVITEM_PRICE_ADD(new ValueIO.InvItemPriceAddIO()),
+        ENTITY_ID(new ValueIO.EntityIO()),
+        BLOCK_ID(new ValueIO.BlockIdIO()),
+        BLOCKSTATE(new ValueIO.BlockStateIO()),
+        BLOCKSTATE_ADD(new ValueIO.BlockStateAddIO()),
+        BONUS_ITEM_ADD(new ValueIO.BonusItemAddIO()),
+        STARTING_ITEM_ADD(new ValueIO.StartingItemAddIO()),
+        POS_TYPE(new ValueIO.PosTypeIO()),
+        GOAL_ADD(new ValueIO.GoalAddIO()),
+        TOOLCATEGORIES_ADD(new ValueIO.ToolCategoriesIO()),
+        GENDER(new ValueIO.GenderIO()),
+        DIRECTION(new ValueIO.DirectionIO()),
+        CLOTHES(new ValueIO.ClothAddIO()),
+        VILLAGERCONFIG(new ValueIO.VillagerConfigIO()),
+        BUILDING(new CultureValueIO.BuildingSetIO()),
+        BUILDING_ADD(new CultureValueIO.BuildingSetAddIO()),
+        BUILDINGCUSTOM(new CultureValueIO.BuildingCustomIO()),
+        BUILDINGCUSTOM_ADD(new CultureValueIO.BuildingCustomAddIO()),
+        VILLAGER_ADD(new CultureValueIO.VillagerAddIO()),
+        SHOP(new CultureValueIO.ShopIO()),
+        RANDOM_BRICK_COLOUR_ADD(new ValueIO.RandomBrickColourAddIO()),
+        BRICK_COLOUR_THEME_ADD(new ValueIO.BrickColourThemeAddIO()),
+        WALL_TYPE(new CultureValueIO.WallIO());
+
+        public ValueIO io;
+
+        private ParameterType(ValueIO parser) {
+            this.io = parser;
+        }
+    }
+
+    /**
+     * Types of positions in buildings.
+     */
+    public static enum PosType {
+        CRAFTING("crafting"),
+        DEFENDING("defending"),
+        LEASURE("leasure"),
+        SELLING("selling"),
+        SHELTER("shelter"),
+        SLEEPING("sleeping");
+
+        public final String code;
+
+        public static String getAllCodes() {
+            StringBuilder s = new StringBuilder();
+            for (PosType posType : values()) {
+                s.append(posType.code).append(" ");
+            }
+            return s.toString().trim();
+        }
+
+        public static PosType getByType(String code) {
+            for (PosType posType : values()) {
+                if (posType.code.equals(code.toLowerCase())) {
+                    return posType;
+                }
+            }
+            return null;
+        }
+
+        private PosType(String code) {
+            this.code = code;
+        }
+
+        /**
+         * Get a position from a building based on this position type.
+         * TODO: Implement when Building and ResManager are ported.
+         */
+        public Point getPosition(Building building) {
+            BuildingResManager resManager = building.getResManager();
+            switch (this) {
+                case CRAFTING:
+                    return new Point(resManager.getCraftingPos());
+                case DEFENDING:
+                    return new Point(resManager.getDefendingPos());
+                case LEASURE:
+                    return new Point(resManager.getLeasurePos());
+                case SELLING:
+                    return new Point(resManager.getSellingPos());
+                case SHELTER:
+                    return new Point(resManager.getShelterPos());
+                case SLEEPING:
+                    return new Point(resManager.getSleepingPos());
+                default:
+                    return null;
+            }
+        }
+    }
+}
