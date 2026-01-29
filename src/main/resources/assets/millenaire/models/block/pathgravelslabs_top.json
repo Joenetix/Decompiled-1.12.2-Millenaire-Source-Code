@@ -1,7 +1,0 @@
-{
-  "parent": "millenaire:block/path_top",
-  "textures": {
-    "side": "millenaire:block/pathgravel_side",
-    "topblock": "millenaire:block/pathgravelslabs"
-  }
-}

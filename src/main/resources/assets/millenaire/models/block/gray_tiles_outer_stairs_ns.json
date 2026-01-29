@@ -1,8 +1,0 @@
-{
-    "parent": "block/outer_stairs",
-    "textures": {
-        "bottom": "millenaire:block/gray_tiles_90n",
-        "top": "millenaire:block/gray_tiles_90p",
-        "side": "millenaire:block/gray_tiles_90p"
-    }
-}

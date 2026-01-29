@@ -1,9 +1,0 @@
-{
-    "parent": "block/half_slab",
-    "textures": {
-        "bottom": "millenaire:block/mudbrick",
-        "top": "millenaire:block/mudbrick",
-        "side": "millenaire:block/mudbrick",
-        "particle" : "millenaire:block/mudbrick"
-    }
-}

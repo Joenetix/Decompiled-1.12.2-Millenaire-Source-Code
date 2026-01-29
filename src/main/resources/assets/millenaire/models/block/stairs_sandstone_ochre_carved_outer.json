@@ -1,8 +1,0 @@
-{
-    "parent": "block/outer_stairs",
-    "textures": {
-        "bottom": "millenaire:block/sandstone_ochre_clean",
-        "top": "millenaire:block/sandstone_ochre_clean",
-        "side": "millenaire:block/sandstone_ochre_carved"
-    }
-}

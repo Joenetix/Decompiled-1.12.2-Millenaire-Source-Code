@@ -1,9 +1,0 @@
-{
-    "parent": "block/upper_slab",
-    "textures": {
-        "bottom": "millenaire:block/cookedbrick",
-        "top": "millenaire:block/cookedbrick",
-        "side": "millenaire:block/cookedbrick",
-        "particle" : "millenaire:block/cookedbrick"
-    }
-}

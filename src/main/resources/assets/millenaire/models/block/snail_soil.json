@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "millenaire:block/snail_soil_empty"
-  }
-}

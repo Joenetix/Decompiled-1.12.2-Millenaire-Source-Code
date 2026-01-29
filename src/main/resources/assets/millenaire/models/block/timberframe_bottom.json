@@ -1,9 +1,0 @@
-{
-    "parent": "block/half_slab",
-    "textures": {
-        "bottom": "millenaire:block/timberframeplain",
-        "top": "millenaire:block/timberframeplain",
-        "side": "millenaire:block/timberframeplain_side",
-        "particle" : "millenaire:block/timberframeplain"
-    }
-}

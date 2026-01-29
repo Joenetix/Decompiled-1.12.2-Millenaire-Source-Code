@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "bottom": "millenaire:block/pathochretiles",
-    "top": "millenaire:block/pathochretiles",
-    "side": "millenaire:block/pathochretiles_side"
-  }
-}

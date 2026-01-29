@@ -1,8 +1,0 @@
-{
-    "parent": "block/inner_stairs",
-    "textures": {
-        "bottom": "millenaire:block/thatch_topbottom",
-        "top": "millenaire:block/thatch_topbottom",
-        "side": "millenaire:block/thatch"
-    }
-}

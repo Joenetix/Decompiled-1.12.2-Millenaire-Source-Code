@@ -1,7 +1,0 @@
-{
-    "parent": "block/crop",
-    "textures": {
-        "crop": "millenaire:block/maize1",
-        "particle" : "millenaire:block/maize1"
-    }
-}

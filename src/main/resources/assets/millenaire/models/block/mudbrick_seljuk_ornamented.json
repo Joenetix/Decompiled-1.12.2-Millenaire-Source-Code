@@ -1,7 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "millenaire:block/mudbrick_seljuk_ornamented",
-    "particle" : "millenaire:block/mudbrick_seljuk_ornamented"
-  }
-}

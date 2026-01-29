@@ -1,8 +1,0 @@
-{
-    "parent": "block/pane_side",
-    "textures": {
-        "edge": "millenaire:block/paper_wall_side",
-        "pane": "millenaire:block/paper_wall",
-        "particle" : "millenaire:block/paper_wall"
-    }
-}

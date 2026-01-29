@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/stairs",
-  "textures": {
-    "bottom": "millenaire:block/green_tiles_0",
-    "top": "millenaire:block/green_tiles_0",
-    "side": "millenaire:block/green_tiles_0"
-  }
-}

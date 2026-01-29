@@ -1,7 +1,0 @@
-{
-    "parent": "block/pane_noside_alt",
-    "textures": {
-        "pane": "millenaire:block/paper_wall",
-        "particle" : "millenaire:block/paper_wall"
-    }
-}
