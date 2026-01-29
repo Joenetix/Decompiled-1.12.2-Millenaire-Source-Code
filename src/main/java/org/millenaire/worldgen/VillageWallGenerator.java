@@ -31,10 +31,41 @@ public class VillageWallGenerator {
 
         List<WallSegment> wallSegments = new ArrayList<>();
 
+        // Resolve BuildingPlanSets - first try direct field, then fallback to string
+        // key
+        Culture culture = wallType.culture;
+
         BuildingPlanSet wallPlanSet = wallType.villageWall;
+        if (wallPlanSet == null && wallType.villageWallKey != null && culture != null) {
+            wallPlanSet = culture.getBuildingPlanSet(wallType.villageWallKey);
+            if (wallPlanSet == null) {
+                wallPlanSet = culture.getBuildingPlanSet("walls/" + wallType.villageWallKey);
+            }
+        }
+
         BuildingPlanSet towerPlanSet = wallType.villageWallTower;
+        if (towerPlanSet == null && wallType.villageWallTowerKey != null && culture != null) {
+            towerPlanSet = culture.getBuildingPlanSet(wallType.villageWallTowerKey);
+            if (towerPlanSet == null) {
+                towerPlanSet = culture.getBuildingPlanSet("walls/" + wallType.villageWallTowerKey);
+            }
+        }
+
         BuildingPlanSet gatewayPlanSet = wallType.villageWallGateway;
+        if (gatewayPlanSet == null && wallType.villageWallGatewayKey != null && culture != null) {
+            gatewayPlanSet = culture.getBuildingPlanSet(wallType.villageWallGatewayKey);
+            if (gatewayPlanSet == null) {
+                gatewayPlanSet = culture.getBuildingPlanSet("walls/" + wallType.villageWallGatewayKey);
+            }
+        }
+
         BuildingPlanSet cornerPlanSet = wallType.villageWallCorner;
+        if (cornerPlanSet == null && wallType.villageWallCornerKey != null && culture != null) {
+            cornerPlanSet = culture.getBuildingPlanSet(wallType.villageWallCornerKey);
+            if (cornerPlanSet == null) {
+                cornerPlanSet = culture.getBuildingPlanSet("walls/" + wallType.villageWallCornerKey);
+            }
+        }
 
         // Default to tower if corner missing
         if (cornerPlanSet == null && towerPlanSet != null) {

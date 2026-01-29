@@ -1,6 +1,6 @@
 {
     "parent": "minecraft:block/template_wall_post",
     "textures": {
-        "wall": "millenaire:blocks/painted_brick_gray"
+        "wall": "millenaire:block/painted_brick_gray"
     }
 }

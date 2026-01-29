@@ -12,10 +12,14 @@ import net.minecraftforge.eventbus.api.IEventBus;
 public class CultureRegistry {
 
     public static void register(IEventBus modEventBus) {
-        // Cultures are now loaded from data files via CultureLoader
-        // No hardcoded culture classes needed
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener(CultureRegistry::onServerStarting);
+    }
 
-        // TODO: Hook CultureLoader initialization here once porting is complete
-        // CultureLoader.loadAllCultures();
+    private static void onServerStarting(net.minecraftforge.event.server.ServerStartingEvent event) {
+        // Load cultures from files (merging into existing static cultures)
+        CultureLoader.loadCultures(event.getServer().getResourceManager());
+
+        // Initialize village types (currently hardcoded in MillenaireCultures)
+        MillenaireCultures.initVillages();
     }
 }

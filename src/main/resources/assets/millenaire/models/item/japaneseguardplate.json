@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "millenaire:items/japaneseguardplate"
+        "layer0": "millenaire:item/japaneseguardplate"
     }
 }

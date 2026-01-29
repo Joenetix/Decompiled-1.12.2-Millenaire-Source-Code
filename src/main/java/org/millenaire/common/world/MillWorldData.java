@@ -20,6 +20,7 @@ import org.millenaire.common.utilities.MillCommonUtilities;
 import org.millenaire.common.utilities.MillLog;
 import org.millenaire.common.utilities.Point;
 import org.millenaire.common.village.Building;
+import org.millenaire.common.village.BuildingLocation;
 import org.millenaire.common.village.VillagerRecord;
 
 import java.io.*;
@@ -109,6 +110,14 @@ public class MillWorldData extends SavedData {
 
     public void addBuilding(Building b, BlockPos pos) {
         addBuilding(b, new Point(pos));
+    }
+
+    public void addBuildingLocation(BuildingLocation bl) {
+        // Stub: In strict 1.12.2 port this presumably tracked locked regions
+        // For now we rely on Building-based collision and VillageMapInfo
+        if (bl != null && bl.pos != null) {
+            // Potentially check for overlaps here
+        }
     }
 
     /**

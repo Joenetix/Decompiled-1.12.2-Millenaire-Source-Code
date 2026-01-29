@@ -1,27 +1,21 @@
 package org.millenaire.common.block;
 
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 
-/**
- * Extended mud brick block for Millénaire.
- * Used in various Indian and other culture buildings.
- * Ported from 1.12.2 to 1.20.1.
- */
 public class BlockExtendedMudBrick extends Block {
-
-    public BlockExtendedMudBrick() {
-        super(BlockBehaviour.Properties.of()
-                .mapColor(MapColor.TERRACOTTA_ORANGE)
-                .strength(1.5F, 4.0F)
-                .sound(SoundType.STONE)
-                .requiresCorrectToolForDrops());
-    }
+    public static final EnumProperty<MudBrickVariant> VARIANT = EnumProperty.create("variant", MudBrickVariant.class);
 
     public BlockExtendedMudBrick(BlockBehaviour.Properties properties) {
         super(properties);
+        this.registerDefaultState(this.stateDefinition.any().setValue(VARIANT, MudBrickVariant.MUDBRICK_SMOOTH));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(VARIANT);
     }
 }
-

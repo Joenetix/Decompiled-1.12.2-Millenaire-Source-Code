@@ -1,9 +1,9 @@
 {
     "ambientocclusion": false,
     "textures": {
-        "particle": "millenaire:blocks/wooden_bars_dark",
-        "bars": "millenaire:blocks/wooden_bars_dark",
-        "edge": "millenaire:blocks/wooden_bars_dark_top"
+        "particle": "millenaire:block/wooden_bars_dark",
+        "bars": "millenaire:block/wooden_bars_dark",
+        "edge": "millenaire:block/wooden_bars_dark_top"
     },
     "elements": [
         {   "from": [ 8, 0, 8 ],

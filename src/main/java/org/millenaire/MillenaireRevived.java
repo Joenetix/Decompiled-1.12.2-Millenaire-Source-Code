@@ -7,6 +7,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.millenaire.commands.MillenaireCommands;
+import org.millenaire.common.culture.CultureRegistry;
 import org.millenaire.core.MillBlockEntities;
 import org.slf4j.Logger;
 
@@ -43,6 +44,7 @@ public class MillenaireRevived {
         org.millenaire.common.goal.Goal.initGoals();
 
         // ===== PHASE 2: Commands and Culture System =====
+        CultureRegistry.register(modEventBus);
         forgeEventBus.addListener(this::onRegisterCommands);
         forgeEventBus.addListener(this::onServerStarting);
 
@@ -55,11 +57,24 @@ public class MillenaireRevived {
     }
 
     private void onAttributeCreation(net.minecraftforge.event.entity.EntityAttributeCreationEvent event) {
+        // Citizen entity attributes
         event.put(org.millenaire.core.MillEntities.CITIZEN.get(),
                 org.millenaire.common.entity.MillVillager.createMobAttributes()
                         .add(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH, 20.0)
                         .add(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED, 0.25)
                         .add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE, 1.0).build());
+
+        // Targeted Blaze - uses Blaze attributes
+        event.put(org.millenaire.core.MillEntities.TARGETED_BLAZE.get(),
+                net.minecraft.world.entity.monster.Blaze.createAttributes().build());
+
+        // Targeted Ghast - uses Ghast attributes
+        event.put(org.millenaire.core.MillEntities.TARGETED_GHAST.get(),
+                net.minecraft.world.entity.monster.Ghast.createAttributes().build());
+
+        // Targeted Wither Skeleton - uses AbstractSkeleton attributes
+        event.put(org.millenaire.core.MillEntities.TARGETED_WITHER_SKELETON.get(),
+                net.minecraft.world.entity.monster.AbstractSkeleton.createAttributes().build());
     }
 
     private void onRegisterCommands(RegisterCommandsEvent event) {
@@ -70,7 +85,9 @@ public class MillenaireRevived {
     private void onServerStarting(net.minecraftforge.event.server.ServerStartingEvent event) {
         // Load village configurations (lazy load on server start to access Resource
         // Manager)
-        org.millenaire.common.culture.MillenaireCultures.initVillages();
+        // Load village configurations via Registry
+        // org.millenaire.common.culture.MillenaireCultures.initVillages(); // Moved to
+        // CultureRegistry
         LOGGER.info("Loaded Millénaire village configurations");
     }
 }

@@ -238,11 +238,15 @@ public class BuildingLocation implements Cloneable {
 
     // ... Clone, ComputeMargins, ContainsPlanTag methods ...
     public void computeMargins() {
-        // Typically 4 blocks in MillConfigValues
-        int margin = 4;
+        int margin = 5; // Default to 5 blocks
+        BuildingPlan plan = getPlan();
+        if (plan != null) {
+            margin = plan.areaToClear;
+        }
+
         this.minxMargin = this.minx - margin + 1;
         this.minzMargin = this.minz - margin + 1;
-        this.minyMargin = this.miny - 3;
+        this.minyMargin = this.miny - 3; // Keep vertical margin standard for now
         this.maxyMargin = this.maxy + 1;
         this.maxxMargin = this.maxx + margin + 1;
         this.maxzMargin = this.maxz + margin + 1;

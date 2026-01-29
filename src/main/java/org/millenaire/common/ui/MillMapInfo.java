@@ -9,7 +9,7 @@ import org.millenaire.common.network.StreamReadWrite;
 import org.millenaire.common.utilities.MillLog;
 import org.millenaire.common.utilities.Point;
 import org.millenaire.common.village.Building;
-import org.millenaire.worldgen.VillageMapInfo;
+import org.millenaire.common.village.VillageMapInfo;
 
 /**
  * Represents map information for a village, used for the village map UI.

@@ -236,6 +236,9 @@ public class MillenaireCommands {
         String typeName = StringArgumentType.getString(context, "type");
         CommandSourceStack source = context.getSource();
 
+        source.sendSuccess(() -> Component.literal("DEBUG: Command received for " + cultureName + " / " + typeName),
+                false);
+
         try {
             ServerPlayer player = source.getPlayerOrException();
             ServerLevel level = player.serverLevel();
@@ -247,6 +250,7 @@ public class MillenaireCommands {
                 source.sendFailure(Component.literal("Culture not found: " + cultureName));
                 return 0;
             }
+            source.sendSuccess(() -> Component.literal("DEBUG: Found culture " + culture.getDisplayName()), false);
 
             // Get Village Type
             org.millenaire.common.culture.VillageType villageType = null;
@@ -259,8 +263,16 @@ public class MillenaireCommands {
 
             if (villageType == null) {
                 source.sendFailure(Component.literal("Village type not found: " + typeName));
+                StringBuilder types = new StringBuilder();
+                for (org.millenaire.common.culture.VillageType t : culture.getVillageTypes()) {
+                    types.append(t.getId()).append(", ");
+                }
+                source.sendSuccess(() -> Component.literal("Available types: " + types.toString()), false);
                 return 0;
             }
+            final org.millenaire.common.culture.VillageType debugVillageType = villageType;
+            source.sendSuccess(() -> Component.literal("DEBUG: Found village type " + debugVillageType.getName()),
+                    false);
 
             // Create final copy for lambda
             final org.millenaire.common.culture.VillageType finalVillageType = villageType;
@@ -282,7 +294,8 @@ public class MillenaireCommands {
                         true);
                 return 1;
             } else {
-                source.sendFailure(Component.literal("Failed to spawn village"));
+                source.sendFailure(Component.literal(
+                        "Failed to spawn village - check server logs for specific reason (Collision? Spawn protection?)"));
                 return 0;
             }
 

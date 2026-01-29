@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "millenaire:items/japanesebluelegs"
+        "layer0": "millenaire:item/japanesebluelegs"
     }
 }

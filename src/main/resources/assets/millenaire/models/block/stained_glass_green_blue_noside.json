@@ -1,6 +1,6 @@
 {
     "parent": "block/pane_noside",
     "textures": {
-        "pane": "millenaire:blocks/stained_glass_green_blue"
+        "pane": "millenaire:block/stained_glass_green_blue"
     }
 }

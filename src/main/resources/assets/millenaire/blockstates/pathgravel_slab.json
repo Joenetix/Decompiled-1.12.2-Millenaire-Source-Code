@@ -1,17 +1,13 @@
 {
-	"forge_marker": 1,
 	"variants": {
-		"half=bottom,stable=false": {
-			"model": "millenaire:pathgravel_bottom"
+		"type=bottom": {
+			"model": "millenaire:block/pathgravel_bottom"
 		},
-		"half=top,stable=false": {
-			"model": "millenaire:pathgravel_top"
+		"type=top": {
+			"model": "millenaire:block/pathgravel_top"
 		},
-		"half=bottom,stable=true": {
-			"model": "millenaire:pathgravel_bottom"
-		},
-		"half=top,stable=true": {
-			"model": "millenaire:pathgravel_top"
+		"type=double": {
+			"model": "millenaire:block/pathgravel"
 		}
 	}
 }

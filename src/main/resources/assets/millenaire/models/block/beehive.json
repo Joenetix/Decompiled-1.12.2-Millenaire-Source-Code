@@ -1,12 +1,12 @@
 {
    "parent": "block/cube_all",
    "textures": {
-     "particle": "millenaire:blocks/beehive",
-     "down": "millenaire:blocks/thatch_topbottom",
-     "up": "millenaire:blocks/thatch_topbottom",
-     "north": "millenaire:blocks/beehive",
-     "east": "millenaire:blocks/beehive",
-     "south": "millenaire:blocks/beehive",
-     "west": "millenaire:blocks/beehive"
+     "particle": "millenaire:block/beehive",
+     "down": "millenaire:block/thatch_topbottom",
+     "up": "millenaire:block/thatch_topbottom",
+     "north": "millenaire:block/beehive",
+     "east": "millenaire:block/beehive",
+     "south": "millenaire:block/beehive",
+     "west": "millenaire:block/beehive"
    }
 }

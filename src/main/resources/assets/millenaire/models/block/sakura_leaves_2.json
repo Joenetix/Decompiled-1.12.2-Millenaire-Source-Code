@@ -1,6 +1,6 @@
 {
     "parent": "block/leaves",
     "textures": {
-        "all": "millenaire:blocks/sakura_leaves_2"
+        "all": "millenaire:block/sakura_leaves_2"
     }
 }

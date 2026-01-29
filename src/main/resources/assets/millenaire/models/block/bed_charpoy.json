@@ -1,9 +1,9 @@
 {
     "parent": "block/block",
     "textures": {
-        "bottom": "millenaire:blocks/empty",
-        "top": "millenaire:blocks/bed_charpoy",
-        "side": "millenaire:blocks/bed_charpoy_side",
+        "bottom": "millenaire:block/empty",
+        "top": "millenaire:block/bed_charpoy",
+        "side": "millenaire:block/bed_charpoy_side",
         "particle" : "blocks/planks_acacia"
     },
     "elements": [

@@ -1,6 +1,6 @@
 {
     "parent": "minecraft:block/template_wall_side",
     "textures": {
-        "wall": "millenaire:blocks/sandstone_carved"
+        "wall": "millenaire:block/sandstone_carved"
     }
 }

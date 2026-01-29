@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "millenaire:blocks/mayangoldblock",
-    "particle" : "millenaire:blocks/mayangoldblock"
+    "all": "millenaire:block/mayangoldblock",
+    "particle" : "millenaire:block/mayangoldblock"
   }
 }

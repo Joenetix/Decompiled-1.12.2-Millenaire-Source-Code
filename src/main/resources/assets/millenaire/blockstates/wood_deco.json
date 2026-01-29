@@ -1,9 +1,29 @@
 {
-	"forge_marker": 1,
+    "forge_marker": 1,
     "variants": {
-        "variant=timberframeplain": { "model": "millenaire:timberframeplain" },
-        "variant=timberframecross": { "model": "millenaire:timberframecross" },
-        "variant=thatch": { "model": "millenaire:thatch" },
-        "variant=beehive": { "model": "millenaire:beehive" }
+        "variant=timberframeplain": {
+            "model": "millenaire:wood_deco_timberframeplain"
+        },
+        "variant=timberframecross": {
+            "model": "millenaire:wood_deco_timberframecross"
+        },
+        "variant=thatch": {
+            "model": "millenaire:wood_deco_thatch"
+        },
+        "variant=beehive": {
+            "model": "millenaire:wood_deco_beehive"
+        },
+        "variant=dirtwall": {
+            "model": "millenaire:wood_deco_dirtwall"
+        },
+        "variant=halftimber": {
+            "model": "millenaire:wood_deco_halftimber"
+        },
+        "variant=halftimber2": {
+            "model": "millenaire:wood_deco_halftimber2"
+        },
+        "variant=halftimber3": {
+            "model": "millenaire:wood_deco_halftimber3"
+        }
     }
 }

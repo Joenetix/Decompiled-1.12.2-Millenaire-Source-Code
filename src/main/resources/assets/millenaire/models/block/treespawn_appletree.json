@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "millenaire:blocks/sapling_appletree",
-    "particle" : "millenaire:blocks/sapling_appletree"
+    "all": "millenaire:block/sapling_appletree",
+    "particle" : "millenaire:block/sapling_appletree"
   }
 }

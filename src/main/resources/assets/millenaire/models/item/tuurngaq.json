@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "millenaire:blocks/tuurngaq"
+        "layer0": "millenaire:block/tuurngaq"
     }
 }

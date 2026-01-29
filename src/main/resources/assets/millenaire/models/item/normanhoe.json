@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "millenaire:items/normanhoe"
+        "layer0": "millenaire:item/normanhoe"
     }
 }

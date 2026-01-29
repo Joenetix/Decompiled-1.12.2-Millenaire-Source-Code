@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "millenaire:items/wolfmeat_cooked"
+        "layer0": "millenaire:item/wolfmeat_cooked"
     }
 }

@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "millenaire:items/cherries"
+        "layer0": "millenaire:item/cherries"
     },
     "display": {
         "gui": {

@@ -652,7 +652,22 @@ public class MillenaireBuildingParser {
      * Loads a single PNG building plan file.
      */
     private static BuildingPlan loadSinglePlan(String path) throws IOException {
-        String fullPath = "assets/millenaire/buildings/" + path;
+        // Path comes in as "culture/subfolder/file.png" (e.g. "norman/townhall_A0.png")
+        // We need to convert it to
+        // "assets/millenaire/cultures/norman/buildings/townhall_A0.png"
+
+        String fullPath;
+        if (path.contains("/")) {
+            int firstSlash = path.indexOf("/");
+            String culture = path.substring(0, firstSlash);
+            String remainder = path.substring(firstSlash + 1);
+            fullPath = "assets/millenaire/cultures/" + culture + "/buildings/" + remainder;
+        } else {
+            // Fallback for unexpected format
+            fullPath = "assets/millenaire/buildings/" + path;
+        }
+
+        LOGGER.info("[DEBUG] Loading plan from: {}", fullPath);
 
         try (InputStream is = MillenaireBuildingParser.class.getClassLoader()
                 .getResourceAsStream(fullPath)) {
@@ -809,7 +824,15 @@ public class MillenaireBuildingParser {
             configPath = path.substring(0, path.lastIndexOf("0.png")) + ".txt";
         }
 
-        String fullConfigPath = "/assets/millenaire/buildings/" + configPath;
+        String fullConfigPath;
+        if (configPath.contains("/")) {
+            int firstSlash = configPath.indexOf("/");
+            String culture = configPath.substring(0, firstSlash);
+            String remainder = configPath.substring(firstSlash + 1);
+            fullConfigPath = "/assets/millenaire/cultures/" + culture + "/buildings/" + remainder;
+        } else {
+            fullConfigPath = "/assets/millenaire/buildings/" + configPath;
+        }
         LOGGER.info("[DEBUG] Attempting to load config from: {}", fullConfigPath);
 
         try (InputStream is = MillenaireBuildingParser.class.getResourceAsStream(fullConfigPath)) {
@@ -997,7 +1020,17 @@ public class MillenaireBuildingParser {
         }
 
         // Single-file building loading via parseSingleImage reuse
-        String fullPath = "assets/millenaire/buildings/" + path;
+        String fullPath;
+        // Fix for asset path resolution: logic expects flat structure but assets are
+        // hierarchical
+        if (path.contains("/")) {
+            int firstSlash = path.indexOf("/");
+            String culture = path.substring(0, firstSlash);
+            String remainder = path.substring(firstSlash + 1);
+            fullPath = "assets/millenaire/cultures/" + culture + "/buildings/" + remainder;
+        } else {
+            fullPath = "assets/millenaire/buildings/" + path;
+        }
         System.out.println("[DEBUG] Full resource path: " + fullPath);
 
         try (InputStream is = MillenaireBuildingParser.class.getClassLoader()

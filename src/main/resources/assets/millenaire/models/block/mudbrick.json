@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "millenaire:blocks/mudbrick",
-    "particle" : "millenaire:blocks/mudbrick"
+    "all": "millenaire:block/mudbrick",
+    "particle" : "millenaire:block/mudbrick"
   }
 }

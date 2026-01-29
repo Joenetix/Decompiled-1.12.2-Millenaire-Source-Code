@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "millenaire:items/alchemist_amulet10"
+        "layer0": "millenaire:item/alchemist_amulet10"
     }
 }

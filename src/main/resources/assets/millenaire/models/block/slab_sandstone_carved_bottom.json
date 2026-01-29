@@ -1,9 +1,9 @@
 {
     "parent": "block/half_slab",
     "textures": {
-        "bottom": "millenaire:blocks/sandstone_clean",
-        "top": "millenaire:blocks/sandstone_clean",
-        "side": "millenaire:blocks/sandstone_carved",
-        "particle" : "millenaire:blocks/sandstone_carved"
+        "bottom": "millenaire:block/sandstone_clean",
+        "top": "millenaire:block/sandstone_clean",
+        "side": "millenaire:block/sandstone_carved",
+        "particle" : "millenaire:block/sandstone_carved"
     }
 }

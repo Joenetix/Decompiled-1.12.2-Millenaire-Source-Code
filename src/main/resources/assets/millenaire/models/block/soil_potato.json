@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "millenaire:blocks/soil_potato",
-    "particle" : "millenaire:blocks/soil_potato"
+    "all": "millenaire:block/soil_potato",
+    "particle" : "millenaire:block/soil_potato"
   }
 }

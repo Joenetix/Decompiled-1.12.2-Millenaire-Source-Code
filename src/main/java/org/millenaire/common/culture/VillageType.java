@@ -637,6 +637,16 @@ public class VillageType implements MillCommonUtilities.WeightedChoice {
         return outerWallKey;
     }
 
+    /**
+     * Get inner wall key as string (for compatibility).
+     */
+    public String getInnerWallKey() {
+        if (innerWallType != null) {
+            return innerWallType.key;
+        }
+        return innerWallKey;
+    }
+
     // === String-based key storage for deferred resolution ===
     private String centreBuildingKey = null;
     private String outerWallKey = null;

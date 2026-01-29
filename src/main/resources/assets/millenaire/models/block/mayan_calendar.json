@@ -1,11 +1,11 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"1": "millenaire:blocks/may_concrete_light_blue",
-		"2": "millenaire:blocks/may_concrete_red",
-		"4": "millenaire:blocks/may_yellow",
-		"9": "millenaire:blocks/may_brown_concrete",
-		"particle": "millenaire:blocks/may_concrete_light_blue"
+		"1": "millenaire:block/may_concrete_light_blue",
+		"2": "millenaire:block/may_concrete_red",
+		"4": "millenaire:block/may_yellow",
+		"9": "millenaire:block/may_brown_concrete",
+		"particle": "millenaire:block/may_concrete_light_blue"
 			},
 	"elements": [
 		{

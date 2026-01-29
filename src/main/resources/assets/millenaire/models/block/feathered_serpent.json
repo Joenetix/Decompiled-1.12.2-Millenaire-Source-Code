@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"3": "millenaire:blocks/may_green",
-		"4": "millenaire:blocks/may_yellow",
-		"particle": "millenaire:blocks/may_green"
+		"3": "millenaire:block/may_green",
+		"4": "millenaire:block/may_yellow",
+		"particle": "millenaire:block/may_green"
 			},
 	"elements": [
 		{

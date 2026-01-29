@@ -26,10 +26,24 @@ public class BlockPathSlab extends SlabBlock implements IBlockPath {
                 .strength(1.5F, 6.0F)
                 .sound(SoundType.STONE)
                 .requiresCorrectToolForDrops());
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(TYPE, net.minecraft.world.level.block.state.properties.SlabType.BOTTOM)
+                .setValue(WATERLOGGED, Boolean.FALSE)
+                .setValue(STABLE, Boolean.TRUE));
     }
 
     public BlockPathSlab(BlockBehaviour.Properties properties) {
         super(properties);
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(TYPE, net.minecraft.world.level.block.state.properties.SlabType.BOTTOM)
+                .setValue(WATERLOGGED, Boolean.FALSE)
+                .setValue(STABLE, Boolean.TRUE));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(STABLE);
     }
 
     public void setDoubleSlab(BlockPath path) {
@@ -51,4 +65,3 @@ public class BlockPathSlab extends SlabBlock implements IBlockPath {
         return false;
     }
 }
-

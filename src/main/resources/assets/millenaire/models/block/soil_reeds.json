@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "millenaire:blocks/soil_reeds",
-    "particle" : "millenaire:blocks/soil_reeds"
+    "all": "millenaire:block/soil_reeds",
+    "particle" : "millenaire:block/soil_reeds"
   }
 }

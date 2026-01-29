@@ -136,6 +136,13 @@ public class WallType {
     public String key;
     public Culture culture;
 
+    // String keys for deferred BuildingPlanSet resolution
+    // Populated by CultureLoader.parseWallType() from config files
+    public String villageWallKey = null;
+    public String villageWallGatewayKey = null;
+    public String villageWallCornerKey = null;
+    public String villageWallTowerKey = null;
+
     public WallType(Culture c, String key) {
         this.key = key;
         this.culture = c;

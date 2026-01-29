@@ -1,8 +1,8 @@
 {
     "ambientocclusion": false,
     "textures": {
-        "particle": "millenaire:blocks/wooden_bars_indian",
-        "bars": "millenaire:blocks/wooden_bars_indian"
+        "particle": "millenaire:block/wooden_bars_indian",
+        "bars": "millenaire:block/wooden_bars_indian"
     },
     "elements": [
         {   "from": [ 8, 0, 7 ],

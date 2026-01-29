@@ -63,11 +63,9 @@ public class MillBlocks {
                                         .sound(SoundType.STONE)));
 
         // TODO: Implement BlockDecorativeEarth with 8 variants
+        // IMPLEMENTED: Now using BlockDecorativeEarth with EarthVariant
         public static final RegistryObject<Block> EARTH_DECORATION = BLOCKS.register("earth_deco",
-                        () -> new Block(BlockBehaviour.Properties.of()
-                                        .mapColor(MapColor.DIRT)
-                                        .strength(0.5F)
-                                        .sound(SoundType.GRAVEL)));
+                        () -> new org.millenaire.common.block.BlockDecorativeEarth());
 
         // =============================================================================
         // NORMAN CULTURE BLOCKS
@@ -75,7 +73,7 @@ public class MillBlocks {
 
         // Extended mud brick variants
         public static final RegistryObject<Block> EXTENDED_MUD_BRICK = BLOCKS.register("extended_mud_brick",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockExtendedMudBrick(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.DIRT)
                                         .strength(2.0F, 10.0F)
                                         .sound(SoundType.STONE)));
@@ -181,20 +179,20 @@ public class MillBlocks {
 
         // Special Indian blocks
         public static final RegistryObject<Block> WET_BRICK = BLOCKS.register("wet_brick",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockWetBrick(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.DIRT)
                                         .strength(0.5F)
                                         .sound(SoundType.GRAVEL)));
 
         public static final RegistryObject<Block> SILK_WORM = BLOCKS.register("silk_worm",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockSilkworm(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.WOOD)
                                         .strength(0.5F)
                                         .noOcclusion()
                                         .sound(SoundType.WOOD)));
 
         public static final RegistryObject<Block> SNAIL_SOIL = BLOCKS.register("snail_soil",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockSnailSoil(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.DIRT)
                                         .strength(0.5F)
                                         .sound(SoundType.SAND)));
@@ -216,19 +214,19 @@ public class MillBlocks {
         // Japanese tiles - TODO: Implement BlockOrientedSlab for proper oriented tile
         // blocks
         public static final RegistryObject<Block> GRAY_TILES = BLOCKS.register("gray_tiles",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new net.minecraft.world.level.block.RotatedPillarBlock(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.STONE)
                                         .strength(2.0F, 10.0F)
                                         .sound(SoundType.STONE)));
 
         public static final RegistryObject<Block> GREEN_TILES = BLOCKS.register("green_tiles",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new net.minecraft.world.level.block.RotatedPillarBlock(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.COLOR_GREEN)
                                         .strength(2.0F, 10.0F)
                                         .sound(SoundType.STONE)));
 
         public static final RegistryObject<Block> RED_TILES = BLOCKS.register("red_tiles",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new net.minecraft.world.level.block.RotatedPillarBlock(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.COLOR_RED)
                                         .strength(2.0F, 10.0F)
                                         .sound(SoundType.STONE)));
@@ -314,13 +312,13 @@ public class MillBlocks {
 
         // Byzantine tiles
         public static final RegistryObject<Block> BYZANTINE_TILES = BLOCKS.register("byzantine_tiles",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new net.minecraft.world.level.block.RotatedPillarBlock(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.COLOR_RED)
                                         .strength(2.0F, 10.0F)
                                         .sound(SoundType.STONE)));
 
         public static final RegistryObject<Block> BYZANTINE_TILES_SLAB = BLOCKS.register("byzantine_tiles_slab",
-                        () -> new SlabBlock(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockOrientedSlab(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.COLOR_RED)
                                         .strength(2.0F, 10.0F)
                                         .sound(SoundType.STONE)));
@@ -333,14 +331,14 @@ public class MillBlocks {
                                                         .sound(SoundType.STONE)));
 
         public static final RegistryObject<Block> BYZANTINE_STONE_TILES = BLOCKS.register("byzantine_stone_tiles",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new net.minecraft.world.level.block.RotatedPillarBlock(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.STONE)
                                         .strength(2.0F, 6.0F)
                                         .sound(SoundType.STONE)));
 
         public static final RegistryObject<Block> BYZANTINE_SANDSTONE_TILES = BLOCKS.register(
                         "byzantine_sandstone_tiles",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new net.minecraft.world.level.block.RotatedPillarBlock(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.SAND)
                                         .strength(2.0F, 6.0F)
                                         .sound(SoundType.STONE)));
@@ -375,7 +373,7 @@ public class MillBlocks {
 
         // Byzantine trees - Olive and Pistachio
         public static final RegistryObject<Block> LEAVES_OLIVETREE = BLOCKS.register("leaves_olivetree",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockOliveLeaves(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.PLANT)
                                         .strength(0.2F)
                                         .sound(SoundType.GRASS)
@@ -389,7 +387,7 @@ public class MillBlocks {
                                         .sound(SoundType.GRASS)));
 
         public static final RegistryObject<Block> LEAVES_PISTACHIO = BLOCKS.register("leaves_pistachio",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockOliveLeaves(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.PLANT)
                                         .strength(0.2F)
                                         .sound(SoundType.GRASS)
@@ -507,86 +505,87 @@ public class MillBlocks {
 
         // Path blocks - used for village paths and building floors
         public static final RegistryObject<Block> PATHDIRT = BLOCKS.register("pathdirt",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockPath(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.DIRT)
                                         .strength(0.5F)
                                         .sound(SoundType.GRAVEL)));
 
         public static final RegistryObject<Block> PATHGRAVEL = BLOCKS.register("pathgravel",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockPath(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.STONE)
                                         .strength(0.5F)
                                         .sound(SoundType.GRAVEL)));
 
         public static final RegistryObject<Block> PATHSLABS = BLOCKS.register("pathslabs",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockPath(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.STONE)
                                         .strength(0.5F)
                                         .sound(SoundType.STONE)));
 
         public static final RegistryObject<Block> PATHSANDSTONE = BLOCKS.register("pathsandstone",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockPath(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.SAND)
                                         .strength(0.5F)
                                         .sound(SoundType.STONE)));
 
         public static final RegistryObject<Block> PATHOCHRETILES = BLOCKS.register("pathochretiles",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockPath(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.TERRACOTTA_ORANGE)
                                         .strength(0.5F)
                                         .sound(SoundType.STONE)));
 
         public static final RegistryObject<Block> PATHGRAVELSLABS = BLOCKS.register("pathgravelslabs",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockPath(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.STONE)
                                         .strength(0.5F)
                                         .sound(SoundType.STONE)));
 
         public static final RegistryObject<Block> PATHSNOW = BLOCKS.register("pathsnow",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockPath(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.SNOW)
                                         .strength(0.2F)
                                         .sound(SoundType.SNOW)));
 
         // Path slabs - half-height variants
+        // Path slabs - half-height variants
         public static final RegistryObject<Block> PATHDIRT_SLAB = BLOCKS.register("pathdirt_slab",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockPathSlab(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.DIRT)
                                         .strength(0.5F)
                                         .sound(SoundType.GRAVEL)));
 
         public static final RegistryObject<Block> PATHGRAVEL_SLAB = BLOCKS.register("pathgravel_slab",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockPathSlab(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.STONE)
                                         .strength(0.5F)
                                         .sound(SoundType.GRAVEL)));
 
         public static final RegistryObject<Block> PATHSLABS_SLAB = BLOCKS.register("pathslabs_slab",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockPathSlab(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.STONE)
                                         .strength(0.5F)
                                         .sound(SoundType.STONE)));
 
         public static final RegistryObject<Block> PATHSANDSTONE_SLAB = BLOCKS.register("pathsandstone_slab",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockPathSlab(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.SAND)
                                         .strength(0.5F)
                                         .sound(SoundType.STONE)));
 
         public static final RegistryObject<Block> PATHOCHRETILES_SLAB = BLOCKS.register("pathochretiles_slab",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockPathSlab(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.TERRACOTTA_ORANGE)
                                         .strength(0.5F)
                                         .sound(SoundType.STONE)));
 
         public static final RegistryObject<Block> PATHGRAVELSLABS_SLAB = BLOCKS.register("pathgravelslabs_slab",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockPathSlab(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.STONE)
                                         .strength(0.5F)
                                         .sound(SoundType.STONE)));
 
         public static final RegistryObject<Block> PATHSNOW_SLAB = BLOCKS.register("pathsnow_slab",
-                        () -> new Block(BlockBehaviour.Properties.of()
+                        () -> new org.millenaire.common.block.BlockPathSlab(BlockBehaviour.Properties.of()
                                         .mapColor(MapColor.SNOW)
                                         .strength(0.2F)
                                         .sound(SoundType.SNOW)));
@@ -649,4 +648,3 @@ public class MillBlocks {
         // - slab_painted_brick_<color>
         // - wall_painted_brick_<color>
 }
-

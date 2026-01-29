@@ -55,7 +55,7 @@ public class BuildingMetadataLoader {
             plan.max = 1;
             plan.priority = 1;
             plan.priorityMoveIn = 10;
-            plan.areaToClear = 1;
+            plan.areaToClear = 5;
             plan.startLevel = 0;
             plan.buildingOrientation = 1;
             plan.minDistance = 0.0f;

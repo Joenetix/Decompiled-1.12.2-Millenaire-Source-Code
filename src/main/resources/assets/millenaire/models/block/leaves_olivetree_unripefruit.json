@@ -1,6 +1,6 @@
 {
     "parent": "block/leaves",
     "textures": {
-        "all": "millenaire:blocks/leaves_olivetree_unripefruit"
+        "all": "millenaire:block/leaves_olivetree_unripefruit"
     }
 }

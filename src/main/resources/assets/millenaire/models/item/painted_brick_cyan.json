@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "millenaire:blocks/painted_brick_cyan",
-    "particle" : "millenaire:blocks/painted_brick_cyan"
+    "all": "millenaire:block/painted_brick_cyan",
+    "particle" : "millenaire:block/painted_brick_cyan"
   }
 }

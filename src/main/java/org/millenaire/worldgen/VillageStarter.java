@@ -8,7 +8,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.DoorBlock;
-import net.minecraft.world.level.block.FenceGateBlock;
+import org.millenaire.common.village.VillageMapInfo;
 import org.millenaire.core.VillageData;
 import org.millenaire.core.VillageManager;
 import org.millenaire.common.culture.Culture;
@@ -16,10 +16,10 @@ import org.millenaire.common.pathing.atomicstryker.AStarConfig;
 import org.millenaire.common.pathing.atomicstryker.AStarNode;
 import org.millenaire.common.pathing.atomicstryker.AStarPathPlannerJPS;
 import org.millenaire.worldgen.VillageWallGenerator;
+import org.millenaire.common.pathing.atomicstryker.RegionMapper;
 import org.millenaire.common.culture.WallType;
 import org.millenaire.common.buildingplan.BuildingPlan;
 import org.millenaire.common.village.BuildingLocation;
-import org.millenaire.common.village.VillageMapInfo;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -395,6 +395,73 @@ public class VillageStarter {
         return null;
     }
 
+    /**
+     * Initialize BuildingLocation bounds and margins from a BuildingPlan.
+     * 
+     * CRITICAL FIX: Our BuildingPlan is a simple record, not the original
+     * Millénaire
+     * class. The BuildingLocation constructor normally calls initialisePlan() which
+     * expects the full BuildingPlan class. Since we use a record, we must manually
+     * compute the bounds here.
+     * 
+     * This ensures VillageMapInfo can properly mark the building's footprint in the
+     * collision detection grid (buildingLocRef and buildingForbidden arrays).
+     * 
+     * @param location    The BuildingLocation to initialize
+     * @param plan        The BuildingPlan with dimensions
+     * @param pos         The world position of the building center
+     * @param orientation The building orientation (0-3)
+     */
+    private static void initializeBuildingLocationBounds(
+            BuildingLocation location,
+            BuildingPlan plan,
+            BlockPos pos,
+            int orientation) {
+
+        int halfLength = plan.length() / 2;
+        int halfWidth = plan.width() / 2;
+
+        // Compute bounds based on orientation
+        // Orientation 0/2 = width along X, length along Z (Corrected)
+        // Orientation 1/3 = width along Z, length along X (Corrected)
+        if (orientation == 0 || orientation == 2) {
+            location.minx = pos.getX() - halfWidth;
+            location.maxx = pos.getX() + halfWidth;
+            location.minz = pos.getZ() - halfLength;
+            location.maxz = pos.getZ() + halfLength;
+        } else {
+            // Swapped for 90/270 degree rotation
+            location.minx = pos.getX() - halfLength;
+            location.maxx = pos.getX() + halfLength;
+            location.minz = pos.getZ() - halfWidth;
+            location.maxz = pos.getZ() + halfWidth;
+        }
+
+        // Vertical bounds
+        location.miny = pos.getY() + plan.startLevel;
+        location.maxy = pos.getY() + plan.startLevel + plan.nbFloors;
+
+        // Store dimensions
+        location.length = plan.length();
+        location.width = plan.width();
+        location.planKey = plan.sourceFile();
+
+        // Compute margins using areaToClear (default 5)
+        int margin = plan.areaToClear;
+        location.minxMargin = location.minx - margin + 1;
+        location.maxxMargin = location.maxx + margin + 1;
+        location.minzMargin = location.minz - margin + 1;
+        location.maxzMargin = location.maxz + margin + 1;
+        location.minyMargin = location.miny - 3; // Standard vertical margin
+        location.maxyMargin = location.maxy + 1;
+
+        LOGGER.debug(
+                "[BOUNDS] Initialized BuildingLocation for {}: pos={}, bounds=[{},{} to {},{}], margins=[{},{} to {},{}]",
+                plan.sourceFile(), pos,
+                location.minx, location.minz, location.maxx, location.maxz,
+                location.minxMargin, location.minzMargin, location.maxxMargin, location.maxzMargin);
+    }
+
     // ===== VILLAGEMAPINFO-BASED BUILDING PLACEMENT =====
     // Full port from original Millénaire BuildingPlan.findBuildingLocation() and
     // testSpot()
@@ -451,6 +518,8 @@ public class VillageStarter {
             }
         }
 
+        int[] errorCounts = new int[20];
+
         // Expanding square search - exactly as in original
         while (radius < maxRadius) {
             int mini = Math.max(0, ci - radius);
@@ -467,6 +536,9 @@ public class VillageStarter {
                                 i + winfo.mapStartX, minj + winfo.mapStartZ,
                                 (System.nanoTime() - startTime) / 1_000_000.0);
                         return lr.location();
+                    } else {
+                        if (lr.errorCode() >= 0 && lr.errorCode() < errorCounts.length)
+                            errorCounts[lr.errorCode()]++;
                     }
                 }
 
@@ -477,6 +549,9 @@ public class VillageStarter {
                         LOGGER.debug("[PLACEMENT] Found location after {}ms",
                                 (System.nanoTime() - startTime) / 1_000_000.0);
                         return lr.location();
+                    } else {
+                        if (lr.errorCode() >= 0 && lr.errorCode() < errorCounts.length)
+                            errorCounts[lr.errorCode()]++;
                     }
                 }
             }
@@ -487,6 +562,9 @@ public class VillageStarter {
                     LocationReturn lr = testSpot(winfo, regionMapper, centre, mini, j, plan, orientation);
                     if (lr.location() != null) {
                         return lr.location();
+                    } else {
+                        if (lr.errorCode() >= 0 && lr.errorCode() < errorCounts.length)
+                            errorCounts[lr.errorCode()]++;
                     }
                 }
 
@@ -495,6 +573,9 @@ public class VillageStarter {
                     LocationReturn lr = testSpot(winfo, regionMapper, centre, maxi, j, plan, orientation);
                     if (lr.location() != null) {
                         return lr.location();
+                    } else {
+                        if (lr.errorCode() >= 0 && lr.errorCode() < errorCounts.length)
+                            errorCounts[lr.errorCode()]++;
                     }
                 }
             }
@@ -502,7 +583,13 @@ public class VillageStarter {
             radius++;
         }
 
-        LOGGER.warn("[PLACEMENT] Could not find location for {} (radius: {})", plan.sourceFile(), radius);
+        LOGGER.warn(
+                "[PLACEMENT] Could not find location for {} (radius: {}). Errors: Bounds(1)={}, Coll(2)={}, Forbid(3)={}, Unbuildable(4)={}, Danger(5)={}, Reach(6)={}, FarTag(7)={}, CloseTag(8)={}",
+                plan.sourceFile(), radius,
+                errorCounts[1], errorCounts[2], errorCounts[3],
+                errorCounts[4], errorCounts[5], errorCounts[6],
+                errorCounts[7], errorCounts[8]);
+
         return null;
     }
 
@@ -593,12 +680,14 @@ public class VillageStarter {
 
         // Calculate footprint dimensions based on orientation
         int xwidth, zwidth;
+        // Use the plan's specific areaToClear (default 5)
+        int margin = plan.areaToClear;
         if (orientation == 1 || orientation == 3) {
-            xwidth = plan.width() + 2 + 2; // areaToClear margins
-            zwidth = plan.length() + 2 + 2;
+            xwidth = plan.width() + margin * 2;
+            zwidth = plan.length() + margin * 2;
         } else {
-            xwidth = plan.length() + 2 + 2;
-            zwidth = plan.width() + 2 + 2;
+            xwidth = plan.length() + margin * 2;
+            zwidth = plan.width() + margin * 2;
         }
 
         // Check all cells in footprint
@@ -716,6 +805,9 @@ public class VillageStarter {
         BlockPos finalPos = new BlockPos(x + winfo.mapStartX, altitude, z + winfo.mapStartZ);
         BuildingLocation location = new BuildingLocation(
                 plan, new org.millenaire.common.utilities.Point(finalPos), orientation);
+
+        // CRITICAL FIX: Manually initialize bounds since our BuildingPlan is a record
+        initializeBuildingLocationBounds(location, plan, finalPos, orientation);
 
         return LocationReturn.success(location);
     }
@@ -1181,7 +1273,7 @@ public class VillageStarter {
             // CRITICAL: Register town hall footprint BEFORE placing it
             // orientation 0 for town hall (no rotation)
             registerBuildingFootprint(centeredTownHallPos, mainPlan.width(), mainPlan.length(),
-                    0, BUILDING_MARGIN, "townhall");
+                    0, mainPlan.areaToClear, "townhall");
 
             MillenaireBuildingParser.placeBuilding(level, centeredTownHallPos, mainPlan);
             villageData.addBuilding(mainBuildingPath, centeredTownHallPos);
@@ -1227,6 +1319,13 @@ public class VillageStarter {
         // Register town hall as first building location
         BuildingLocation thLocation = new BuildingLocation(
                 mainPlan, new org.millenaire.common.utilities.Point(centeredTownHallPos), 0);
+
+        // CRITICAL FIX: Manually initialize bounds for collision detection
+        initializeBuildingLocationBounds(thLocation, mainPlan, centeredTownHallPos, 0);
+        LOGGER.info("[TOWNHALL] Registered footprint: [{},{} to {},{}], margins: [{},{} to {},{}]",
+                thLocation.minx, thLocation.minz, thLocation.maxx, thLocation.maxz,
+                thLocation.minxMargin, thLocation.minzMargin, thLocation.maxxMargin, thLocation.maxzMargin);
+
         plannedBuildings.add(thLocation);
 
         // Track placed buildings for terrain smoothing
@@ -1243,7 +1342,150 @@ public class VillageStarter {
 
         // Create RegionMapper for reachability from town hall
         RegionMapper regionMapper = new RegionMapper();
-        regionMapper.createConnectionsTable(winfo, centeredTownHallPos);
+        try {
+            regionMapper.createConnectionsTable(winfo, new org.millenaire.common.utilities.Point(centeredTownHallPos));
+        } catch (Exception e) {
+            LOGGER.error("Error creating connections table for village at " + centeredTownHallPos, e);
+        }
+
+        // ===== WALL PLACEMENT (BEFORE STARTERS) - Matches original WorldGenVillage
+        // =====
+        // Original places walls BEFORE starter buildings so they block building
+        // placement
+        // This is critical: walls occupy cells in winfo, preventing starters from
+        // spawning there
+        List<BlockPos> gatePositions = new ArrayList<>();
+
+        // Place INNER walls (if configured) - e.g., stonewalls at innerWallRadius=40
+        // Try getInnerWallType() first (populated by ParametersManager), then fallback
+        // to key lookup
+        WallType innerWallType = villageType.getInnerWallType();
+        if (innerWallType == null) {
+            // Fallback: resolve from string key stored by VillageConfigLoader
+            String innerWallKey = villageType.getInnerWallKey();
+            if (innerWallKey != null) {
+                innerWallType = culture.getWallType(innerWallKey);
+                LOGGER.info("[WALLS] Resolved inner wall from key '{}' -> {}", innerWallKey, innerWallType);
+            }
+        }
+        int innerWallRadius = villageType.getInnerWallRadius();
+        LOGGER.info("[WALLS] Checking inner wall: type={}, radius={}", innerWallType, innerWallRadius);
+
+        if (innerWallType != null && innerWallRadius > 0) {
+            LOGGER.info("[WALLS] Placing inner wall: {} at radius {}", innerWallType.key, innerWallRadius);
+            VillageWallGenerator wallGen = new VillageWallGenerator(level);
+            List<BuildingLocation> innerWallLocs = wallGen.computeWallBuildingLocations(
+                    villageType, innerWallType, innerWallRadius, winfo, adjustedCenter);
+
+            LOGGER.info("[WALLS] Got {} inner wall locations", innerWallLocs.size());
+
+            // Add wall locations to planned buildings (marks cells as occupied)
+            plannedBuildings.addAll(innerWallLocs);
+
+            // Register each wall segment to occupancy grid
+            for (BuildingLocation wallLoc : innerWallLocs) {
+                try {
+                    BuildingPlan wallPlan = MillenaireBuildingParser.loadPlan(wallLoc.planKey);
+                    BlockPos wallPos = wallLoc.pos.getBlockPos();
+                    int wallY = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, wallPos.getX(),
+                            wallPos.getZ());
+                    BlockPos finalWallPos = new BlockPos(wallPos.getX(), wallY, wallPos.getZ());
+
+                    // Register footprint to occupancy grid
+                    registerBuildingFootprint(finalWallPos, wallPlan.width(), wallPlan.length(),
+                            wallLoc.orientation, 0, "innerwall");
+
+                    // Place wall segment
+                    Rotation wallRotation = millenairOrientationToRotation(wallLoc.orientation);
+                    MillenaireBuildingParser.placeBuilding(level, finalWallPos, wallPlan, wallRotation);
+
+                    // Track gates for path generation
+                    if (wallLoc.planKey.contains("gateway") || wallLoc.planKey.contains("gate")) {
+                        gatePositions.add(finalWallPos);
+                    }
+                } catch (Exception e) {
+                    LOGGER.error("[WALLS] Failed to place inner wall segment: {}", wallLoc.planKey, e);
+                }
+            }
+
+            // Update winfo after adding walls (marks their cells in the map)
+            winfo.update(level, plannedBuildings, new org.millenaire.common.utilities.Point(adjustedCenter),
+                    villageRadius);
+            // Recreate regionMapper with wall-updated map
+            try {
+                regionMapper.createConnectionsTable(winfo,
+                        new org.millenaire.common.utilities.Point(centeredTownHallPos));
+            } catch (Exception e) {
+                LOGGER.error("Error updating connections table (inner walls) at " + centeredTownHallPos, e);
+            }
+            LOGGER.info("[WALLS] Inner wall complete: {} segments, {} gates", innerWallLocs.size(),
+                    gatePositions.size());
+        } else {
+            LOGGER.info("[WALLS] No inner wall configured (type={}, radius={})", innerWallType, innerWallRadius);
+        }
+
+        // Place OUTER walls/border posts (if configured) - e.g., borderposts at village
+        // edge
+        // Try getOuterWallType() first (populated by ParametersManager), then fallback
+        // to key lookup
+        WallType outerWallType = villageType.getOuterWallType();
+        if (outerWallType == null) {
+            // Fallback: resolve from string key stored by VillageConfigLoader
+            String outerWallKey = villageType.getOuterWallKey();
+            if (outerWallKey != null) {
+                outerWallType = culture.getWallType(outerWallKey);
+                LOGGER.info("[WALLS] Resolved outer wall from key '{}' -> {}", outerWallKey, outerWallType);
+            }
+        }
+        LOGGER.info("[WALLS] Checking outer wall: type={}", outerWallType);
+
+        if (outerWallType != null) {
+            LOGGER.info("[WALLS] Placing outer border: {}", outerWallType.key);
+            VillageWallGenerator wallGen = new VillageWallGenerator(level);
+            // outerWall uses 0 for maxWallRadius which means it goes to village edge
+            List<BuildingLocation> outerWallLocs = wallGen.computeWallBuildingLocations(
+                    villageType, outerWallType, 0, winfo, adjustedCenter);
+
+            LOGGER.info("[WALLS] Got {} outer wall locations", outerWallLocs.size());
+
+            // Add to planned buildings
+            plannedBuildings.addAll(outerWallLocs);
+
+            for (BuildingLocation wallLoc : outerWallLocs) {
+                try {
+                    BuildingPlan wallPlan = MillenaireBuildingParser.loadPlan(wallLoc.planKey);
+                    BlockPos wallPos = wallLoc.pos.getBlockPos();
+                    int wallY = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, wallPos.getX(),
+                            wallPos.getZ());
+                    BlockPos finalWallPos = new BlockPos(wallPos.getX(), wallY, wallPos.getZ());
+
+                    registerBuildingFootprint(finalWallPos, wallPlan.width(), wallPlan.length(),
+                            wallLoc.orientation, 0, "outerwall");
+
+                    Rotation wallRotation = millenairOrientationToRotation(wallLoc.orientation);
+                    MillenaireBuildingParser.placeBuilding(level, finalWallPos, wallPlan, wallRotation);
+
+                    if (wallLoc.planKey.contains("gateway") || wallLoc.planKey.contains("gate")) {
+                        gatePositions.add(finalWallPos);
+                    }
+                } catch (Exception e) {
+                    LOGGER.error("[WALLS] Failed to place outer wall segment: {}", wallLoc.planKey, e);
+                }
+            }
+
+            // Update winfo again after outer walls
+            winfo.update(level, plannedBuildings, new org.millenaire.common.utilities.Point(adjustedCenter),
+                    villageRadius);
+            try {
+                regionMapper.createConnectionsTable(winfo,
+                        new org.millenaire.common.utilities.Point(centeredTownHallPos));
+            } catch (Exception e) {
+                LOGGER.error("Error updating connections table (outer walls) at " + centeredTownHallPos, e);
+            }
+            LOGGER.info("[WALLS] Outer wall complete: {} segments", outerWallLocs.size());
+        } else {
+            LOGGER.info("[WALLS] No outer wall configured");
+        }
 
         // Add Core and Secondary buildings to PLANNED projects
         for (String core : villageType.getCoreBuildings()) {
@@ -1279,6 +1521,7 @@ public class VillageStarter {
                 int maxRadius = (int) (plan.maxDistance() * villageRadius);
 
                 // Apply minimum floor to prevent edge cases
+                // NOTE: Keep this low (5) to respect plan-specific minDistance values
                 if (minRadius < 5)
                     minRadius = 5;
                 if (maxRadius < minRadius)
@@ -1310,7 +1553,7 @@ public class VillageStarter {
 
                 // Also register to occupancy grid (legacy support)
                 registerBuildingFootprint(validPos, plan.width(), plan.length(),
-                        finalOrientation, BUILDING_MARGIN, key);
+                        finalOrientation, plan.areaToClear, key);
 
                 // Place the building
                 MillenaireBuildingParser.placeBuilding(level, validPos, plan, rotation);
@@ -1339,8 +1582,9 @@ public class VillageStarter {
         // smoothTerrain(level, adjustedCenter, placedLocations, villageRadius);
         // }
 
-        // 3. Place Walls & Gates based on village type configuration
-        List<BlockPos> gatePositions = placeVillageBorder(level, adjustedCenter, buildingCenters, culture, villageType);
+        // NOTE: Walls are now placed BEFORE starters (see above) to match original
+        // Millénaire
+        // The gatePositions list is already populated from the wall placement code
 
         // 4. Generate Paths - Connect Center to Building ENTRANCES AND Gates
         List<String> pathMaterials = villageType.getPathMaterials();
@@ -1589,18 +1833,76 @@ public class VillageStarter {
                 LOGGER.info("Path found! Length: {}", route.size());
                 buildPathFromRoute(level, route, pathState);
             } else {
-                LOGGER.warn("No path found from {} to {}", pathStartPos, pathDest);
-                try {
-                    LOGGER.debug("Start viable: {}, End viable: {}",
-                            org.millenaire.common.pathing.atomicstryker.AStarStatic.isViable(level, startNode, 1,
-                                    config),
-                            org.millenaire.common.pathing.atomicstryker.AStarStatic.isViable(level, endNode, 1,
-                                    config));
-                } catch (Exception e) {
-                    LOGGER.debug("Error checking path viability: {}", e.getMessage());
+                LOGGER.warn("A* path failed from {} to {}; using straight-line fallback", pathStartPos, pathDest);
+                // Fallback: Generate a straight-line path when A* fails
+                List<BlockPos> straightPath = generateStraightPath(level, pathStartPos, pathDest, 2);
+                if (!straightPath.isEmpty()) {
+                    LOGGER.info("Straight-line fallback path generated with {} blocks", straightPath.size());
+                    for (BlockPos pathPos : straightPath) {
+                        BlockState existingState = level.getBlockState(pathPos);
+                        BlockState belowState = level.getBlockState(pathPos.below());
+                        // Only place on replaceable blocks with solid support
+                        if ((existingState.isAir() || existingState.canBeReplaced()) && belowState.isSolid()) {
+                            level.setBlock(pathPos, pathState, 3);
+                        }
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * Generate a straight-line path between two points, following terrain.
+     * Used as fallback when A* pathfinding fails.
+     * Uses Bresenham-style line rasterization with terrain height adjustment.
+     *
+     * @param level The server level
+     * @param start Starting position
+     * @param end   Ending position
+     * @param width Path width (expands perpendicular to direction)
+     * @return List of BlockPos for path blocks
+     */
+    private static List<BlockPos> generateStraightPath(ServerLevel level, BlockPos start, BlockPos end, int width) {
+        List<BlockPos> path = new ArrayList<>();
+
+        int dx = end.getX() - start.getX();
+        int dz = end.getZ() - start.getZ();
+        double distance = Math.sqrt(dx * dx + dz * dz);
+
+        if (distance < 1)
+            return path;
+
+        // Normalize direction
+        double dirX = dx / distance;
+        double dirZ = dz / distance;
+
+        // Perpendicular direction for width
+        double perpX = -dirZ;
+        double perpZ = dirX;
+
+        // Step along the line
+        for (double t = 0; t <= distance; t += 1.0) {
+            int baseX = (int) (start.getX() + dirX * t);
+            int baseZ = (int) (start.getZ() + dirZ * t);
+
+            // Expand width perpendicular to path direction
+            for (int w = -width / 2; w <= width / 2; w++) {
+                int pathX = (int) (baseX + perpX * w);
+                int pathZ = (int) (baseZ + perpZ * w);
+
+                // Get terrain-following Y position (surface - 1 for path level)
+                int pathY = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pathX, pathZ) - 1;
+
+                // Don't place underwater
+                BlockPos testPos = new BlockPos(pathX, pathY, pathZ);
+                if (!level.getFluidState(testPos).isEmpty())
+                    continue;
+
+                path.add(testPos);
+            }
+        }
+
+        return path;
     }
 
     /**

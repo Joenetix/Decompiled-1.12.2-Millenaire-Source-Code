@@ -1,5 +1,6 @@
 package org.millenaire.client;
 
+import javax.annotation.Nonnull;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -16,7 +17,8 @@ public class CitizenRenderer extends MobRenderer<Citizen, VillagerModel<Citizen>
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Citizen entity) {
+    @Nonnull
+    public ResourceLocation getTextureLocation(@Nonnull Citizen entity) {
         if (entity instanceof org.millenaire.common.entity.MillVillager) {
             org.millenaire.common.entity.MillVillager millVillager = (org.millenaire.common.entity.MillVillager) entity;
             if (millVillager.texture != null) {

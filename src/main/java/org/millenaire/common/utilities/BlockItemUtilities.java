@@ -26,7 +26,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.millenaire.common.forge.Mill;
 // import org.millenaire.common.network.ServerSender;
 import org.millenaire.common.village.Building;
-import org.millenaire.worldgen.VillageMapInfo.BuildingLocation;
+
 // import org.millenaire.common.world.MillWorldData;
 // import org.millenaire.common.world.UserProfile;
 

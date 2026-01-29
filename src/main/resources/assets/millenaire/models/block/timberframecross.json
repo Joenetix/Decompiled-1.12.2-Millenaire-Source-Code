@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "millenaire:blocks/timberframecross",
-        "particle" : "millenaire:blocks/timberframecross"
+    "all": "millenaire:block/timberframecross",
+        "particle" : "millenaire:block/timberframecross"
   }
 }

@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "millenaire:blocks/alchemistexplosive",
-    "particle" : "millenaire:blocks/alchemistexplosive"
+    "all": "millenaire:block/alchemistexplosive",
+    "particle" : "millenaire:block/alchemistexplosive"
   }
 }

@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "millenaire:items/yggdrasil_amulet1"
+        "layer0": "millenaire:item/yggdrasil_amulet1"
     }
 }

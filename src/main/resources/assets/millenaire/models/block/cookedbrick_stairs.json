@@ -1,8 +1,8 @@
 {
     "parent": "block/stairs",
     "textures": {
-        "bottom": "millenaire:blocks/cookedbrick",
-        "top": "millenaire:blocks/cookedbrick",
-        "side": "millenaire:blocks/cookedbrick"
+        "bottom": "millenaire:block/cookedbrick",
+        "top": "millenaire:block/cookedbrick",
+        "side": "millenaire:block/cookedbrick"
     }
 }

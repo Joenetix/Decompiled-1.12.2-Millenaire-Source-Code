@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "millenaire:items/furlegs"
+        "layer0": "millenaire:item/furlegs"
     }
 }

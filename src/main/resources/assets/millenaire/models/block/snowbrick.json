@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "millenaire:blocks/snowbrick",
-    "particle" : "millenaire:blocks/snowbrick"
+    "all": "millenaire:block/snowbrick",
+    "particle" : "millenaire:block/snowbrick"
   }
 }

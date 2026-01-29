@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "millenaire:items/cherry_blossom"
+        "layer0": "millenaire:item/cherry_blossom"
     },
     "display": {
         "thirdperson_righthand": {

@@ -1,6 +1,6 @@
 {
     "parent": "minecraft:block/template_wall_side",
     "textures": {
-        "wall": "millenaire:blocks/painted_brick_magenta"
+        "wall": "millenaire:block/painted_brick_magenta"
     }
 }

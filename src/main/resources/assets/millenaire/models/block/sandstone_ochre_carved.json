@@ -1,12 +1,12 @@
 {
   "parent": "block/cube",
   "textures": {
-  		"down": "millenaire:blocks/sandstone_ochre_clean",
-        "up": "millenaire:blocks/sandstone_ochre_clean",
-        "north": "millenaire:blocks/sandstone_ochre_carved",
-        "east": "millenaire:blocks/sandstone_ochre_carved",
-        "south": "millenaire:blocks/sandstone_ochre_carved",
-        "west": "millenaire:blocks/sandstone_ochre_carved",
-    	"particle" : "millenaire:blocks/sandstone_ochre_carved"
+  		"down": "millenaire:block/sandstone_ochre_clean",
+        "up": "millenaire:block/sandstone_ochre_clean",
+        "north": "millenaire:block/sandstone_ochre_carved",
+        "east": "millenaire:block/sandstone_ochre_carved",
+        "south": "millenaire:block/sandstone_ochre_carved",
+        "west": "millenaire:block/sandstone_ochre_carved",
+    	"particle" : "millenaire:block/sandstone_ochre_carved"
   }
 }

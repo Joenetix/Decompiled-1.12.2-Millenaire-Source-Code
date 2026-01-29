@@ -1,17 +1,13 @@
 {
-	"forge_marker": 1,
-	"variants": {	
-		"half=bottom,stable=false": {
-			"model": "millenaire:pathslabs_bottom"
+	"variants": {
+		"type=bottom": {
+			"model": "millenaire:block/pathslabs_bottom"
 		},
-		"half=top,stable=false": {
-			"model": "millenaire:pathslabs_top"
+		"type=top": {
+			"model": "millenaire:block/pathslabs_top"
 		},
-		"half=bottom,stable=true": {
-			"model": "millenaire:pathslabs_bottom"
-		},
-		"half=top,stable=true": {
-			"model": "millenaire:pathslabs_top"
+		"type=double": {
+			"model": "millenaire:block/pathslabs"
 		}
 	}
 }

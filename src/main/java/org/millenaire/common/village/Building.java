@@ -18,16 +18,13 @@ import org.millenaire.entities.Citizen;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraft.world.entity.player.Player;
 import org.millenaire.common.item.TradeGood;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.millenaire.common.village.BuildingLocation;
-import org.millenaire.worldgen.RegionMapper;
+import org.millenaire.common.pathing.atomicstryker.RegionMapper;
 
 public class Building {
     public MillWorldData mw;
@@ -52,6 +49,7 @@ public class Building {
     public List<BlockPos> subBuildings = new ArrayList<>(); // Buildings belonging to this village
     public Map<BlockPos, String> subBuildingTypes = new HashMap<>(); // Quick lookup
     public final CopyOnWriteArrayList<ConstructionIP> constructionsIP = new CopyOnWriteArrayList<>();
+    public final Map<BuildingProject.EnumProjects, List<BuildingProject>> buildingProjects = new ConcurrentHashMap<>();
     public VillageMapInfo winfo;
 
     // State
@@ -60,6 +58,14 @@ public class Building {
     public String qualifier;
     public UUID controlledBy;
     public String controlledByName;
+
+    public void findName(String tagName) {
+        if (tagName != null && !tagName.isEmpty()) {
+            this.name = tagName;
+        } else {
+            this.name = generateBuildingName();
+        }
+    }
 
     // Tags for building capabilities and state
     private final Set<String> tags = new HashSet<>();
@@ -601,6 +607,89 @@ public class Building {
         markDirty();
     }
 
+    public void initialiseVillage() {
+        getVillage(); // Ensure village is created
+        if (village != null) {
+            // Additional initialization if needed
+        }
+    }
+
+    public void initialiseBuildingProjects() {
+        // Initialize projects map if needed
+        if (buildingProjects.isEmpty()) {
+            for (BuildingProject.EnumProjects ep : BuildingProject.EnumProjects.values()) {
+                buildingProjects.put(ep, new CopyOnWriteArrayList<>());
+            }
+        }
+    }
+
+    public void registerBuildingLocation(BuildingLocation bl) {
+        if (mw != null) {
+            mw.addBuildingLocation(bl);
+        }
+    }
+
+    public void registerBuildingEntity(Building b) {
+        if (getVillage() != null) {
+            getVillage().addBuilding(b);
+        }
+        if (!subBuildings.contains(b.getPos())) {
+            subBuildings.add(b.getPos());
+            subBuildingTypes.put(b.getPos(), b.location != null ? b.location.planKey : "unknown");
+            markDirty();
+        }
+    }
+
+    public String getVillageQualifiedName() {
+        if (getVillage() != null) {
+            return getVillage().getVillageQualifiedName();
+        }
+        return name != null ? name : "Unknown Village";
+    }
+
+    public String getVillageNameWithoutQualifier() {
+        if (getVillage() != null) {
+            // Assuming village name is stored without qualifier or separate
+            return name;
+        }
+        return name;
+    }
+
+    public List<BuildingProject> getFlatProjectList() {
+        List<BuildingProject> list = new ArrayList<>();
+        for (List<BuildingProject> projects : buildingProjects.values()) {
+            list.addAll(projects);
+        }
+        return list;
+    }
+
+    public int getNbProjects() {
+        int count = 0;
+        for (List<BuildingProject> projects : buildingProjects.values()) {
+            count += projects.size();
+        }
+        return count;
+    }
+
+    public void resetConstructionsAndGoals() {
+        // Clear active constructions logic
+        constructionsIP.clear();
+        // Reset goals if applicable
+    }
+
+    public void initialiseRelations(org.millenaire.common.utilities.Point parentVillage) {
+        if (parentVillage != null) {
+            // Logic to set relations
+        }
+    }
+
+    public void updateWorldInfo() {
+        if (winfo == null && villageType != null) {
+            winfo = new VillageMapInfo(world, new org.millenaire.common.utilities.Point(pos), villageType.radius);
+            // Should update map info here
+        }
+    }
+
     // Village Integration
     private org.millenaire.core.Village village;
 
@@ -865,20 +954,6 @@ public class Building {
             this.controlledByName = null;
         }
         markDirty();
-    }
-
-    /**
-     * Get the fully qualified village name.
-     */
-    public String getVillageQualifiedName() {
-        StringBuilder sb = new StringBuilder();
-        if (name != null) {
-            sb.append(name);
-        }
-        if (qualifier != null && !qualifier.isEmpty()) {
-            sb.append(" (").append(qualifier).append(")");
-        }
-        return sb.length() > 0 ? sb.toString() : "Unknown Village";
     }
 
     /**

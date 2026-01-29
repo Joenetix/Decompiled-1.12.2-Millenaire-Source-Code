@@ -1,9 +1,9 @@
 {
     "parent": "block/half_slab",
     "textures": {
-        "bottom": "millenaire:blocks/mudbrick",
-        "top": "millenaire:blocks/mudbrick",
-        "side": "millenaire:blocks/mudbrick",
-        "particle" : "millenaire:blocks/mudbrick"
+        "bottom": "millenaire:block/mudbrick",
+        "top": "millenaire:block/mudbrick",
+        "side": "millenaire:block/mudbrick",
+        "particle" : "millenaire:block/mudbrick"
     }
 }

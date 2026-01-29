@@ -1,9 +1,9 @@
 {
     "parent": "block/upper_slab",
     "textures": {
-        "bottom": "millenaire:blocks/timberframeplain",
-        "top": "millenaire:blocks/timberframeplain",
-        "side": "millenaire:blocks/timberframeplain_side",
-        "particle" : "millenaire:blocks/timberframeplain"
+        "bottom": "millenaire:block/timberframeplain",
+        "top": "millenaire:block/timberframeplain",
+        "side": "millenaire:block/timberframeplain_side",
+        "particle" : "millenaire:block/timberframeplain"
     }
 }

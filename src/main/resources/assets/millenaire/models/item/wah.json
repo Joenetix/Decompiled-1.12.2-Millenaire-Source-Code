@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "millenaire:items/wah"
+        "layer0": "millenaire:item/wah"
     }
 }

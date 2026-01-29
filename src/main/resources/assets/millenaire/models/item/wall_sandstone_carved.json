@@ -1,6 +1,6 @@
 {
     "parent": "block/wall_inventory",
     "textures": {
-        "wall": "millenaire:blocks/sandstone_carved"
+        "wall": "millenaire:block/sandstone_carved"
     }
 }

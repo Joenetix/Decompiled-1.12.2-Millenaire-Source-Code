@@ -1,7 +1,7 @@
 {
     "parent": "block/crop",
     "textures": {
-        "crop": "millenaire:blocks/vine1lower",
-        "particle" : "millenaire:blocks/vine1lower"
+        "crop": "millenaire:block/vine1lower",
+        "particle" : "millenaire:block/vine1lower"
     }
 }

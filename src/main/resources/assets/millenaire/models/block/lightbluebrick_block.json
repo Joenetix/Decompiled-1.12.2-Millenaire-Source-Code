@@ -1,6 +1,6 @@
 {
    "parent": "block/cube_all",
    "textures": {
-       "all": "millenaire:blocks/lightbluebrick_block"
+       "all": "millenaire:block/lightbluebrick_block"
    }
 }

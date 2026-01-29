@@ -1,6 +1,6 @@
 {
     "parent": "block/pane_noside_alt",
     "textures": {
-        "pane": "millenaire:blocks/stained_glass_white"
+        "pane": "millenaire:block/stained_glass_white"
     }
 }

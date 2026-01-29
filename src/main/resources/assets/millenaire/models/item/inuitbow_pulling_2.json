@@ -1,6 +1,6 @@
 {
     "parent": "item/bow",
     "textures": {
-        "layer0": "millenaire:items/inuitbow2"
+        "layer0": "millenaire:item/inuitbow2"
     }
 }

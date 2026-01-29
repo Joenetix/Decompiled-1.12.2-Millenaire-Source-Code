@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "millenaire:blocks/rosette_center"
+        "layer0": "millenaire:block/rosette_center"
     }
 }

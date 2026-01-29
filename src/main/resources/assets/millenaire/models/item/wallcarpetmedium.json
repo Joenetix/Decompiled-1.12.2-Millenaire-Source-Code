@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "millenaire:items/wallcarpetmedium"
+        "layer0": "millenaire:item/wallcarpetmedium"
     }
 }

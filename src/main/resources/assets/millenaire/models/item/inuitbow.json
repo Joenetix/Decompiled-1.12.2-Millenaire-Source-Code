@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "millenaire:items/inuitbow_standby"
+        "layer0": "millenaire:item/inuitbow_standby"
     },
     "display": {
         "thirdperson_righthand": {

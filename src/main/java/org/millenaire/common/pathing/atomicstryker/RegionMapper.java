@@ -8,7 +8,7 @@ import org.millenaire.common.config.MillConfigValues;
 import org.millenaire.common.utilities.MillLog;
 import org.millenaire.common.utilities.Point;
 import org.millenaire.common.utilities.ThreadSafeUtilities;
-import org.millenaire.worldgen.VillageMapInfo;
+import org.millenaire.common.village.VillageMapInfo;
 
 public class RegionMapper {
     private static final int MIN_SIZE_FOR_REGION_BRIDGING = 200;

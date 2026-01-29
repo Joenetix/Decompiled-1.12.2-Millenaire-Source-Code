@@ -54,7 +54,14 @@ public class CultureLoader {
 
     private static void loadCulture(String cultureId, ResourceManager resourceManager) {
         try {
-            Culture culture = new Culture(cultureId, capitalizeFirst(cultureId));
+            // Check if culture already exists (statically defined)
+            Culture culture = MillenaireCultures.getCulture(cultureId);
+            if (culture == null) {
+                // Only create new if not defined in MillenaireCultures
+                culture = new Culture(cultureId, capitalizeFirst(cultureId));
+                ListCultures.add(culture);
+                cultures.put(cultureId, culture);
+            }
 
             // Load name lists
             loadNameLists(culture, cultureId, resourceManager);
@@ -65,11 +72,10 @@ public class CultureLoader {
             // Load shops
             loadShops(culture, cultureId, resourceManager);
 
-            // Register the culture
-            cultures.put(cultureId, culture);
-            ListCultures.add(culture);
+            // Load wall types - CRITICAL for village walls to work!
+            loadWallTypes(culture, cultureId, resourceManager);
 
-            LOGGER.info("Loaded culture: {}", cultureId);
+            LOGGER.info("Loaded culture data for: {}", cultureId);
         } catch (Exception e) {
             LOGGER.warn("Could not load culture {}: {}", cultureId, e.getMessage());
         }
@@ -148,6 +154,94 @@ public class CultureLoader {
     private static void loadShops(Culture culture, String cultureId, ResourceManager resourceManager) {
         // Shop files would be in cultures/{cultureId}/shops/
         // For now, this is a stub that can be expanded
+    }
+
+    /**
+     * Load wall types from cultures/{cultureId}/walls/*.txt
+     * This is CRITICAL for village walls to appear!
+     */
+    private static void loadWallTypes(Culture culture, String cultureId, ResourceManager resourceManager) {
+        // Known wall type files for each culture - expand as needed
+        String[] wallTypeNames = { "stonewalls", "palisade", "borderposts", "mudwall" };
+
+        LOGGER.info("[WALLS] Starting wall load for culture '{}'", cultureId);
+
+        for (String wallTypeName : wallTypeNames) {
+            ResourceLocation loc = new ResourceLocation("millenaire",
+                    "cultures/" + cultureId + "/walls/" + wallTypeName + ".txt");
+
+            LOGGER.info("[WALLS] Checking for wall config at: {}", loc);
+
+            try {
+                if (resourceManager.getResource(loc).isPresent()) {
+                    Resource resource = resourceManager.getResource(loc).get();
+                    WallType wallType = parseWallType(wallTypeName, culture, resource);
+
+                    if (wallType != null) {
+                        culture.addWallType(wallType);
+                        LOGGER.info(
+                                "[WALLS] SUCCESS: Loaded wall type '{}' for culture '{}'. Keys: wall={}, tower={}, gate={}",
+                                wallTypeName, cultureId, wallType.villageWallKey, wallType.villageWallTowerKey,
+                                wallType.villageWallGatewayKey);
+                    } else {
+                        LOGGER.error("[WALLS] FAILED: Parsed wall type '{}' was null", wallTypeName);
+                    }
+                } else {
+                    LOGGER.warn("[WALLS] Wall config not found: {}", loc);
+                }
+            } catch (Exception e) {
+                LOGGER.error("[WALLS] EXCEPTION loading wall '{}': {}", loc, e.getMessage(), e);
+            }
+        }
+    }
+
+    /**
+     * Parse a wall type from its config file.
+     */
+    private static WallType parseWallType(String key, Culture culture, Resource resource) {
+        WallType wallType = new WallType(culture, key);
+
+        try (InputStream is = resource.open();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty() || line.startsWith("//")) {
+                    continue;
+                }
+
+                String[] parts = line.split("=", 2);
+                if (parts.length < 2) {
+                    continue;
+                }
+
+                String configKey = parts[0].trim().toLowerCase();
+                String configValue = parts[1].trim();
+
+                // Parse wall building plan references
+                // These will be resolved to BuildingPlanSets later
+                switch (configKey) {
+                    case "village_wall":
+                        wallType.villageWallKey = configValue;
+                        break;
+                    case "village_wall_gate":
+                        wallType.villageWallGatewayKey = configValue;
+                        break;
+                    case "village_wall_corner":
+                        wallType.villageWallCornerKey = configValue;
+                        break;
+                    case "village_wall_tower":
+                        wallType.villageWallTowerKey = configValue;
+                        break;
+                }
+            }
+
+            return wallType;
+        } catch (Exception e) {
+            LOGGER.warn("Failed to parse wall type '{}': {}", key, e.getMessage());
+            return null;
+        }
     }
 
     private static int parseInt(String value, int defaultValue) {

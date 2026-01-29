@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "millenaire:items/byzantineicon_large"
+        "layer0": "millenaire:item/byzantineicon_large"
     }
 }

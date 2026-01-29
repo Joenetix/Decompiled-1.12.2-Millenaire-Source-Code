@@ -1,10 +1,10 @@
 {
     "parent": "millenaire:block/oriented_upper_slab",
     "textures": {
-        "bottom": "millenaire:blocks/gray_tiles_0",
-        "top": "millenaire:blocks/gray_tiles_0",
-        "side_ns": "millenaire:blocks/gray_tiles_0",
-        "side_ew": "millenaire:blocks/gray_tiles_90p",
-        "particle" : "millenaire:blocks/gray_tiles_0"
+        "bottom": "millenaire:block/gray_tiles_0",
+        "top": "millenaire:block/gray_tiles_0",
+        "side_ns": "millenaire:block/gray_tiles_0",
+        "side_ew": "millenaire:block/gray_tiles_90p",
+        "particle" : "millenaire:block/gray_tiles_0"
     }
 }

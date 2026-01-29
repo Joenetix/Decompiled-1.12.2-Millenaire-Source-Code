@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "millenaire:blocks/soil_maize",
-    "particle" : "millenaire:blocks/soil_maize"
+    "all": "millenaire:block/soil_maize",
+    "particle" : "millenaire:block/soil_maize"
   }
 }

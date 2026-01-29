@@ -1,0 +1,65 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.minecraftforge.net' }
+        maven { url 'https://repo.spongepowered.org/maven' }
+        maven { url 'https://maven.anatawa12.com/forgegradle/' }
+    }
+    dependencies {
+        classpath 'com.anatawa12.forge:ForgeGradle:2.3-1.0.+'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = '1.0.0'
+group = 'org.millenaire'
+archivesBaseName = 'millenaire-1.12.2-baseline'
+
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = "1.12.2-14.23.5.2768"
+    runDir = "run"
+    mappings = "stable_39"
+}
+
+// Include todeploy folder in JAR for content deployment
+sourceSets {
+    main {
+        resources {
+            srcDirs += 'src/main/java/todeploy'
+        }
+    }
+}
+
+jar {
+    // Include todeploy folder at root of JAR
+    from('src/main/java') {
+        include 'todeploy/**'
+    }
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven { url 'https://maven.cleanroommc.com' }
+}
+
+dependencies {
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}

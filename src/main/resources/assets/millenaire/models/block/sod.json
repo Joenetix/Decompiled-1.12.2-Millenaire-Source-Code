@@ -1,8 +1,8 @@
 {
 	"parent": "block/block",
 	"textures": {
-		"overlay": "millenaire:blocks/sod_overlay",
-		"empty": "millenaire:blocks/empty",
+		"overlay": "millenaire:block/sod_overlay",
+		"empty": "millenaire:block/empty",
 		"particle": "#planks"
 	},
 	"elements": [

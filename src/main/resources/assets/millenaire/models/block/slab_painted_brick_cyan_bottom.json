@@ -1,9 +1,9 @@
 {
     "parent": "block/half_slab",
     "textures": {
-        "bottom": "millenaire:blocks/painted_brick_cyan",
-        "top": "millenaire:blocks/painted_brick_cyan",
-        "side": "millenaire:blocks/painted_brick_cyan",
-        "particle" : "millenaire:blocks/painted_brick_cyan"
+        "bottom": "millenaire:block/painted_brick_cyan",
+        "top": "millenaire:block/painted_brick_cyan",
+        "side": "millenaire:block/painted_brick_cyan",
+        "particle" : "millenaire:block/painted_brick_cyan"
     }
 }

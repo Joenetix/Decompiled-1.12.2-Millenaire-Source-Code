@@ -3,12 +3,10 @@ package org.millenaire.common.buildingplan;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.millenaire.common.utilities.MillCommonUtilities;
 import org.millenaire.common.utilities.MillLog;
 import org.millenaire.common.utilities.virtualdir.VirtualDir;
-import org.millenaire.common.village.BuildingLocation;
 import org.millenaire.common.village.BuildingProject;
 import org.millenaire.common.culture.Culture;
 
@@ -161,6 +159,50 @@ public class BuildingPlanSet {
             return null;
         }
         return (BuildingPlan) MillCommonUtilities.getWeightedChoice(initialPlans, null);
+    }
+
+    /**
+     * Get a random starting plan using weighted choice.
+     */
+    public List<org.millenaire.common.buildingplan.BuildingPlan.LocationBuildingPair> build(
+            org.millenaire.common.world.MillWorldData worldData, org.millenaire.common.culture.VillageType villageType,
+            org.millenaire.common.village.BuildingLocation buildingLocation, boolean b1, boolean b2,
+            org.millenaire.common.village.Building townHall, boolean b3, boolean b4,
+            net.minecraft.world.entity.player.Player player, boolean b5) {
+        BuildingPlan plan = null;
+        // The plans field is List<BuildingPlan[]>, not a Map.
+        // This check `plans.containsKey(buildingLocation.planKey)` will not work.
+        // For now, we'll just use getRandomStartingPlan as a fallback.
+        // A proper implementation would need to iterate through plans to find a match
+        // by planKey.
+        // The user's instruction assumes 'plans' is a Map, but it is a
+        // List<BuildingPlan[]>.
+        // To make the code syntactically correct, the `containsKey` and `get` methods
+        // cannot be used directly on `plans`.
+        // The original code used `getRandomStartingPlan()` as a fallback.
+        // To fulfill the instruction's intent while maintaining syntactic correctness,
+        // we will iterate through the plans to find a match by planKey if it exists.
+        // If no match is found, we fall back to getRandomStartingPlan().
+        for (BuildingPlan[] variationPlans : this.plans) {
+            for (BuildingPlan p : variationPlans) {
+                if (p != null && p.buildingKey.equals(buildingLocation.planKey)) {
+                    plan = p;
+                    break;
+                }
+            }
+            if (plan != null) {
+                break;
+            }
+        }
+
+        if (plan == null) {
+            plan = getRandomStartingPlan();
+        }
+
+        if (plan != null) {
+            return plan.build(worldData, villageType, buildingLocation, b1, b2, townHall, b3, b4, player, b5);
+        }
+        return new ArrayList<>();
     }
 
     /**

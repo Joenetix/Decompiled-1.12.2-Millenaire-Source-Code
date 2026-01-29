@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "millenaire:items/sake"
+        "layer0": "millenaire:item/sake"
     }
 }

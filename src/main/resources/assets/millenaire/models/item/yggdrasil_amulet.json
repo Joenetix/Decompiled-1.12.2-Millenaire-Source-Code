@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "millenaire:items/yggdrasil_amulet0"
+        "layer0": "millenaire:item/yggdrasil_amulet0"
     },
     "overrides": [
         { "predicate": { "score": 0 }, "model": "millenaire:item/yggdrasil_amulet" },

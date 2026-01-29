@@ -1,6 +1,6 @@
 {
     "parent": "millenaire:block/mil_pane_noside",
     "textures": {
-        "pane": "millenaire:blocks/rosette_lowercorner"
+        "pane": "millenaire:block/rosette_lowercorner"
     }
 }

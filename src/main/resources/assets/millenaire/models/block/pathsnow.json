@@ -1,7 +1,7 @@
 {
   "parent": "millenaire:block/path",
   "textures": {
-    "side": "millenaire:blocks/pathsnow_side",
-    "topblock": "millenaire:blocks/pathsnow"
+    "side": "millenaire:block/pathsnow_side",
+    "topblock": "millenaire:block/pathsnow"
   }
 }

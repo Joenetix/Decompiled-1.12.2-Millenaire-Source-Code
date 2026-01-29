@@ -1,12 +1,12 @@
 {
   "parent": "block/cube",
   "textures": {
-  		"down": "millenaire:blocks/empty",
-        "up": "millenaire:blocks/empty",
-        "north": "millenaire:blocks/painted_brick_decoration_yellow",
-        "east": "millenaire:blocks/painted_brick_decoration_yellow",
-        "south": "millenaire:blocks/painted_brick_decoration_yellow",
-        "west": "millenaire:blocks/painted_brick_decoration_yellow",
-    	"particle" : "millenaire:blocks/painted_brick_decoration_yellow"
+  		"down": "millenaire:block/empty",
+        "up": "millenaire:block/empty",
+        "north": "millenaire:block/painted_brick_decoration_yellow",
+        "east": "millenaire:block/painted_brick_decoration_yellow",
+        "south": "millenaire:block/painted_brick_decoration_yellow",
+        "west": "millenaire:block/painted_brick_decoration_yellow",
+    	"particle" : "millenaire:block/painted_brick_decoration_yellow"
   }
 }

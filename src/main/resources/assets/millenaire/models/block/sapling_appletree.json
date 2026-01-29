@@ -1,6 +1,6 @@
 {
     "parent": "block/cross",
     "textures": {
-        "cross": "millenaire:blocks/sapling_appletree"
+        "cross": "millenaire:block/sapling_appletree"
     }
 }

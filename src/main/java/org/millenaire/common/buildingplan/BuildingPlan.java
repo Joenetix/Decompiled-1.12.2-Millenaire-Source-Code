@@ -27,6 +27,8 @@ import org.millenaire.common.village.BuildingLocation;
 import org.millenaire.common.village.BuildingProject;
 import org.millenaire.common.culture.Culture;
 import org.millenaire.common.item.InvItem;
+import org.millenaire.common.pathing.atomicstryker.RegionMapper;
+import org.millenaire.common.village.VillageMapInfo;
 
 /**
  * Represents a building plan loaded from PNG files.
@@ -807,6 +809,17 @@ public class BuildingPlan implements IBuildingPlan, MillCommonUtilities.Weighted
     }
 
     /**
+     * Finds a valid location for this building plan.
+     * Stub implementation for compilation.
+     */
+    public BuildingLocation findBuildingLocation(VillageMapInfo winfo, RegionMapper regionMapper, Point targetPos,
+            int radius, java.util.Random random, int maxTries) {
+        // TODO: Implement full terrain scanning and location finding logic
+        // For now, returning null to satisfy compilation.
+        return null;
+    }
+
+    /**
      * Reference building points.
      * Links special points from the plan to the building's resource manager.
      * Full port from 1.12.2 referenceBuildingPoints().
@@ -1031,7 +1044,7 @@ public class BuildingPlan implements IBuildingPlan, MillCommonUtilities.Weighted
      * @param ignoreExtraConstraints Skip farFromTag/closeToTag checks
      * @return LocationReturn with valid location or error code
      */
-    public LocationReturn testSpot(org.millenaire.worldgen.VillageMapInfo winfo,
+    public LocationReturn testSpot(VillageMapInfo winfo,
             Point centre, int x, int z, java.util.Random random,
             int porientation, boolean ignoreExtraConstraints) {
 
@@ -1051,10 +1064,10 @@ public class BuildingPlan implements IBuildingPlan, MillCommonUtilities.Weighted
         // Check farFromTag constraints
         if (!ignoreExtraConstraints && this.farFromTag != null) {
             for (String tag : this.farFromTag.keySet()) {
-                for (org.millenaire.worldgen.VillageMapInfo.BuildingLocation location : winfo.getBuildingLocations()) {
+                for (BuildingLocation location : winfo.getBuildingLocations()) {
                     if (location.planKey != null && location.planKey.contains(tag)) {
                         double dist = testPosHorizontal.horizontalDistanceTo(
-                                new Point(location.pos.getX(), 0, location.pos.getZ()));
+                                new Point(location.pos.getiX(), 0, location.pos.getiZ()));
                         if (dist < this.farFromTag.get(tag).intValue()) {
                             return new LocationReturn(LocationReturn.TOO_CLOSE_TO_TAG, testPosHorizontal);
                         }
@@ -1067,10 +1080,10 @@ public class BuildingPlan implements IBuildingPlan, MillCommonUtilities.Weighted
         if (!ignoreExtraConstraints && this.closeToTag != null && !this.closeToTag.isEmpty()) {
             for (String tag : this.closeToTag.keySet()) {
                 boolean foundNearbyBuilding = false;
-                for (org.millenaire.worldgen.VillageMapInfo.BuildingLocation location : winfo.getBuildingLocations()) {
+                for (BuildingLocation location : winfo.getBuildingLocations()) {
                     if (location.planKey != null && location.planKey.contains(tag)) {
                         double dist = testPosHorizontal.horizontalDistanceTo(
-                                new Point(location.pos.getX(), 0, location.pos.getZ()));
+                                new Point(location.pos.getiX(), 0, location.pos.getiZ()));
                         if (dist < this.closeToTag.get(tag).intValue()) {
                             foundNearbyBuilding = true;
                             break;

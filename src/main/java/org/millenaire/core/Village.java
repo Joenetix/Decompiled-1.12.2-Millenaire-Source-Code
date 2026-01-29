@@ -299,6 +299,10 @@ public class Village {
         return villageName;
     }
 
+    public String getVillageQualifiedName() {
+        return villageName + " (" + culture + ")";
+    }
+
     public int getPopulationSize() {
         return citizenIds.size();
     }

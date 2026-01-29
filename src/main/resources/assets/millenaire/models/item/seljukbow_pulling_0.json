@@ -1,6 +1,6 @@
 {
     "parent": "item/bow",
     "textures": {
-        "layer0": "millenaire:items/seljuk_bow_0"
+        "layer0": "millenaire:item/seljuk_bow_0"
     }
 }
