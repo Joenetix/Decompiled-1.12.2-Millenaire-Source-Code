@@ -32,11 +32,11 @@ import org.millenaire.common.village.Building;
 
 public class GuiPujas extends GuiContainer {
    private static final ResourceLocation texturePujas = new ResourceLocation("millenaire", "textures/gui/pujas.png");
-   private static final ResourceLocation textureSacrifices = new ResourceLocation("millenaire", "textures/gui/mayansacrifices.png");
+   private static final ResourceLocation textureSacrifices = new ResourceLocation("millenaire",
+         "textures/gui/mayansacrifices.png");
    private final Building temple;
    private final EntityPlayer player;
    private final Method drawSlotInventory;
-   private final Method drawItemStackInventory;
 
    public GuiPujas(EntityPlayer player, Building temple) {
       super(new ContainerPuja(player, temple));
@@ -48,7 +48,7 @@ public class GuiPujas extends GuiContainer {
       }
 
       this.drawSlotInventory = MillCommonUtilities.getDrawSlotInventoryMethod(this);
-      this.drawItemStackInventory = MillCommonUtilities.getDrawItemStackInventoryMethod(this);
+
    }
 
    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
@@ -69,22 +69,20 @@ public class GuiPujas extends GuiContainer {
          for (int cp = 0; cp < this.temple.pujas.getTargets().size(); cp++) {
             if (this.temple.pujas.currentTarget == this.temple.pujas.getTargets().get(cp)) {
                this.drawTexturedModalRect(
-                  x + this.getTargetXStart() + colPos * this.getButtonWidth(),
-                  y + this.getTargetYStart() + this.getButtonHeight() * linePos,
-                  this.temple.pujas.getTargets().get(cp).startXact,
-                  this.temple.pujas.getTargets().get(cp).startYact,
-                  this.getButtonWidth(),
-                  this.getButtonHeight()
-               );
+                     x + this.getTargetXStart() + colPos * this.getButtonWidth(),
+                     y + this.getTargetYStart() + this.getButtonHeight() * linePos,
+                     this.temple.pujas.getTargets().get(cp).startXact,
+                     this.temple.pujas.getTargets().get(cp).startYact,
+                     this.getButtonWidth(),
+                     this.getButtonHeight());
             } else {
                this.drawTexturedModalRect(
-                  x + this.getTargetXStart() + colPos * this.getButtonWidth(),
-                  y + this.getTargetYStart() + this.getButtonHeight() * linePos,
-                  this.temple.pujas.getTargets().get(cp).startX,
-                  this.temple.pujas.getTargets().get(cp).startY,
-                  this.getButtonWidth(),
-                  this.getButtonHeight()
-               );
+                     x + this.getTargetXStart() + colPos * this.getButtonWidth(),
+                     y + this.getTargetYStart() + this.getButtonHeight() * linePos,
+                     this.temple.pujas.getTargets().get(cp).startX,
+                     this.temple.pujas.getTargets().get(cp).startY,
+                     this.getButtonWidth(),
+                     this.getButtonHeight());
             }
 
             if (++colPos >= this.getNbPerLines()) {
@@ -124,7 +122,7 @@ public class GuiPujas extends GuiContainer {
 
       try {
          for (int k = 0; k < this.buttonList.size(); k++) {
-            GuiButton guibutton = (GuiButton)this.buttonList.get(k);
+            GuiButton guibutton = (GuiButton) this.buttonList.get(k);
             guibutton.drawButton(this.mc, i, j, partialTicks);
          }
       } catch (Exception var18) {
@@ -143,7 +141,7 @@ public class GuiPujas extends GuiContainer {
       Slot hoveredSlot = null;
 
       for (int i1 = 0; i1 < this.inventorySlots.inventorySlots.size(); i1++) {
-         Slot slot1 = (Slot)this.inventorySlots.inventorySlots.get(i1);
+         Slot slot1 = (Slot) this.inventorySlots.inventorySlots.get(i1);
          this.drawSlotInventory(slot1);
          if (this.getIsMouseOverSlot(slot1, mouseX, mouseY)) {
             hoveredSlot = slot1;
@@ -165,11 +163,9 @@ public class GuiPujas extends GuiContainer {
       MinecraftForge.EVENT_BUS.post(new DrawForeground(this, mouseX, mouseY));
       InventoryPlayer inventoryplayer = this.mc.player.inventory;
       if (inventoryplayer.getItemStack() != null) {
-         try {
-            this.drawItemStackInventory.invoke(this, inventoryplayer.getItemStack(), i - 240 - 8, j - 240 - 8, null);
-         } catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException var17) {
-            MillLog.printException(var17);
-         }
+         this.itemRender.renderItemAndEffectIntoGUI(inventoryplayer.getItemStack(), i - 240 - 8, j - 240 - 8);
+         this.itemRender.renderItemOverlayIntoGUI(this.fontRenderer, inventoryplayer.getItemStack(), i - 240 - 8,
+               j - 240 - 8, null);
       }
 
       GlStateManager.popMatrix();
@@ -182,8 +178,8 @@ public class GuiPujas extends GuiContainer {
          if (hoveredSlot.getHasStack()) {
             itemstack = hoveredSlot.getStack();
             list = itemstack.getTooltip(
-               this.mc.player, this.mc.gameSettings.advancedItemTooltips ? TooltipFlags.ADVANCED : TooltipFlags.NORMAL
-            );
+                  this.mc.player,
+                  this.mc.gameSettings.advancedItemTooltips ? TooltipFlags.ADVANCED : TooltipFlags.NORMAL);
             this.renderToolTipCustom(itemstack, mouseX, mouseY, list);
          } else if (hoveredSlot instanceof ContainerPuja.OfferingSlot) {
             List<String> var24 = new ArrayList();
@@ -209,12 +205,13 @@ public class GuiPujas extends GuiContainer {
 
          for (int cp = 0; cp < this.temple.pujas.getTargets().size(); cp++) {
             if (mouseX > startx + this.getTargetXStart() + colPos * this.getButtonWidth()
-               && mouseX < startx + this.getTargetXStart() + (colPos + 1) * this.getButtonWidth()
-               && mouseY > starty + this.getTargetYStart() + this.getButtonHeight() * linePos
-               && mouseY < starty + this.getTargetYStart() + this.getButtonHeight() * (linePos + 1)) {
+                  && mouseX < startx + this.getTargetXStart() + (colPos + 1) * this.getButtonWidth()
+                  && mouseY > starty + this.getTargetYStart() + this.getButtonHeight() * linePos
+                  && mouseY < starty + this.getTargetYStart() + this.getButtonHeight() * (linePos + 1)) {
                String s = LanguageUtilities.string(this.temple.pujas.getTargets().get(cp).mouseOver);
                int stringlength = this.fontRenderer.getStringWidth(s);
-               this.drawGradientRect(mouseX + 5, mouseY - 3, mouseX + stringlength + 10, mouseY + 8 + 3, -1073741824, -1073741824);
+               this.drawGradientRect(mouseX + 5, mouseY - 3, mouseX + stringlength + 10, mouseY + 8 + 3, -1073741824,
+                     -1073741824);
                this.fontRenderer.drawString(s, mouseX + 8, mouseY, 15790320);
             }
 
@@ -302,9 +299,9 @@ public class GuiPujas extends GuiContainer {
 
          for (int cp = 0; cp < this.temple.pujas.getTargets().size(); cp++) {
             if (x > startx + this.getTargetXStart() + colPos * this.getButtonWidth()
-               && x < startx + this.getTargetXStart() + (colPos + 1) * this.getButtonWidth()
-               && y > starty + this.getTargetYStart() + this.getButtonHeight() * linePos
-               && y < starty + this.getTargetYStart() + this.getButtonHeight() * (linePos + 1)) {
+                  && x < startx + this.getTargetXStart() + (colPos + 1) * this.getButtonWidth()
+                  && y > starty + this.getTargetYStart() + this.getButtonHeight() * linePos
+                  && y < starty + this.getTargetYStart() + this.getButtonHeight() * (linePos + 1)) {
                ClientSender.pujasChangeEnchantment(this.player, this.temple, cp);
             }
 

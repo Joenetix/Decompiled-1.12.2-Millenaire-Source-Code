@@ -1,0 +1,24 @@
+# Gradle
+.gradle/
+build/
+bin/
+
+# Run directory (often contains logs, saves, etc.)
+run/
+
+# Temporary files
+mappings_temp/
+*.log
+build_log.txt
+
+# OS generated
+Thumbs.db
+.DS_Store
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Research/Backup folders (assuming these are local only unless specified)
+1.12.2 research/

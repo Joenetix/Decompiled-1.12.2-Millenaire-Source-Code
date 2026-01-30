@@ -77,7 +77,8 @@ public class MillCommonUtilities {
 
       if (hasPurse) {
          int current_denier = WorldUtilities.getItemsFromChest(chest, MillItems.DENIER, 0, Integer.MAX_VALUE);
-         int current_DENIER_ARGENT = WorldUtilities.getItemsFromChest(chest, MillItems.DENIER_ARGENT, 0, Integer.MAX_VALUE);
+         int current_DENIER_ARGENT = WorldUtilities.getItemsFromChest(chest, MillItems.DENIER_ARGENT, 0,
+               Integer.MAX_VALUE);
          int current_DENIER_OR = WorldUtilities.getItemsFromChest(chest, MillItems.DENIER_OR, 0, Integer.MAX_VALUE);
          int finalChange = current_DENIER_OR * 64 * 64 + current_DENIER_ARGENT * 64 + current_denier + toChange;
 
@@ -108,20 +109,19 @@ public class MillCommonUtilities {
          int current_DENIER_OR = countChestItems(chest, MillItems.DENIER_OR, 0);
          if (MillConfigValues.LogWifeAI >= 1) {
             MillLog.major(
-               null,
-               "Putting: "
-                  + denier
-                  + "/"
-                  + DENIER_ARGENT
-                  + "/"
-                  + DENIER_OR
-                  + " replacing "
-                  + current_denier
-                  + "/"
-                  + current_DENIER_ARGENT
-                  + "/"
-                  + current_DENIER_OR
-            );
+                  null,
+                  "Putting: "
+                        + denier
+                        + "/"
+                        + DENIER_ARGENT
+                        + "/"
+                        + DENIER_OR
+                        + " replacing "
+                        + current_denier
+                        + "/"
+                        + current_DENIER_ARGENT
+                        + "/"
+                        + current_DENIER_OR);
          }
 
          if (denier < current_denier) {
@@ -165,14 +165,15 @@ public class MillCommonUtilities {
 
          for (int i = 0; i < maxSlot; i++) {
             ItemStack stack = chest.getStackInSlot(i);
-            if (stack != null && stack.getItem() == item && (meta == -1 || stack.getItemDamage() < 0 || stack.getItemDamage() == meta)) {
+            if (stack != null && stack.getItem() == item
+                  && (meta == -1 || stack.getItemDamage() < 0 || stack.getItemDamage() == meta)) {
                nb += stack.getCount();
             }
 
             if (item == Item.getItemFromBlock(Blocks.LOG)
-               && meta == -1
-               && stack != null
-               && stack.getItem() == Item.getItemFromBlock(Blocks.LOG2)) {
+                  && meta == -1
+                  && stack != null
+                  && stack.getItem() == Item.getItemFromBlock(Blocks.LOG2)) {
                nb += stack.getCount();
             }
          }
@@ -187,14 +188,15 @@ public class MillCommonUtilities {
       } else {
          int nb = 0;
          ItemStack stack = furnace.getStackInSlot(2);
-         if (stack != null && stack.getItem() == item && (meta == -1 || stack.getItemDamage() < 0 || stack.getItemDamage() == meta)) {
+         if (stack != null && stack.getItem() == item
+               && (meta == -1 || stack.getItemDamage() < 0 || stack.getItemDamage() == meta)) {
             nb += stack.getCount();
          }
 
          if (item == Item.getItemFromBlock(Blocks.LOG)
-            && meta == -1
-            && stack != null
-            && stack.getItem() == Item.getItemFromBlock(Blocks.LOG2)) {
+               && meta == -1
+               && stack != null
+               && stack.getItem() == Item.getItemFromBlock(Blocks.LOG2)) {
             nb += stack.getCount();
          }
 
@@ -248,16 +250,15 @@ public class MillCommonUtilities {
          double var6 = random.nextGaussian() * 0.02;
          double var8 = random.nextGaussian() * 0.02;
          ent.world
-            .spawnParticle(
-               EnumParticleTypes.HEART,
-               ent.posX + random.nextFloat() * ent.width * 2.0F - ent.width,
-               ent.posY + 0.5 + random.nextFloat() * ent.height,
-               ent.posZ + random.nextFloat() * ent.width * 2.0F - ent.width,
-               var4,
-               var6,
-               var8,
-               new int[0]
-            );
+               .spawnParticle(
+                     EnumParticleTypes.HEART,
+                     ent.posX + random.nextFloat() * ent.width * 2.0F - ent.width,
+                     ent.posY + 0.5 + random.nextFloat() * ent.height,
+                     ent.posZ + random.nextFloat() * ent.width * 2.0F - ent.width,
+                     var4,
+                     var6,
+                     var8,
+                     new int[0]);
       }
    }
 
@@ -303,12 +304,15 @@ public class MillCommonUtilities {
       }
    }
 
-   public static Method getDrawItemStackInventoryMethod(GuiContainer gui) {
-      return ReflectionHelper.findMethod(GuiContainer.class, "drawItemStack", "drawItemStack", new Class[]{ItemStack.class, int.class, int.class, String.class});
-   }
-
    public static Method getDrawSlotInventoryMethod(GuiContainer gui) {
-      return ReflectionHelper.findMethod(GuiContainer.class, "drawSlot", "drawSlot", new Class[]{Slot.class});
+      for (Method method : GuiContainer.class.getDeclaredMethods()) {
+         if (method.getParameterTypes().length == 1 && method.getParameterTypes()[0] == Slot.class
+               && method.getReturnType() == Void.TYPE) {
+            method.setAccessible(true);
+            return method;
+         }
+      }
+      throw new RuntimeException("Could not find drawSlot method in GuiContainer via signature");
    }
 
    public static File getExportDir() {
@@ -349,9 +353,11 @@ public class MillCommonUtilities {
    public static double getItemWeaponDamage(Item item) {
       Multimap<String, AttributeModifier> multimap = item.getItemAttributeModifiers(EntityEquipmentSlot.MAINHAND);
       if (multimap.containsKey(SharedMonsterAttributes.ATTACK_DAMAGE.getName())
-         && multimap.get(SharedMonsterAttributes.ATTACK_DAMAGE.getName()).toArray().length > 0
-         && multimap.get(SharedMonsterAttributes.ATTACK_DAMAGE.getName()).toArray()[0] instanceof AttributeModifier) {
-         AttributeModifier weaponModifier = (AttributeModifier)multimap.get(SharedMonsterAttributes.ATTACK_DAMAGE.getName()).toArray()[0];
+            && multimap.get(SharedMonsterAttributes.ATTACK_DAMAGE.getName()).toArray().length > 0
+            && multimap.get(SharedMonsterAttributes.ATTACK_DAMAGE.getName())
+                  .toArray()[0] instanceof AttributeModifier) {
+         AttributeModifier weaponModifier = (AttributeModifier) multimap
+               .get(SharedMonsterAttributes.ATTACK_DAMAGE.getName()).toArray()[0];
          return weaponModifier.getAmount();
       } else {
          return 0.0;
@@ -360,15 +366,19 @@ public class MillCommonUtilities {
 
    public static int[] getJumpDestination(World world, int x, int y, int z) {
       if (!WorldUtilities.isBlockFullCube(world, x, y, z) && !WorldUtilities.isBlockFullCube(world, x, y + 1, z)) {
-         return new int[]{x, y, z};
-      } else if (!WorldUtilities.isBlockFullCube(world, x + 1, y, z) && !WorldUtilities.isBlockFullCube(world, x + 1, y + 1, z)) {
-         return new int[]{x + 1, y, z};
-      } else if (!WorldUtilities.isBlockFullCube(world, x - 1, y, z) && !WorldUtilities.isBlockFullCube(world, x - 1, y + 1, z)) {
-         return new int[]{x - 1, y, z};
-      } else if (!WorldUtilities.isBlockFullCube(world, x, y, z + 1) && !WorldUtilities.isBlockFullCube(world, x, y + 1, z + 1)) {
-         return new int[]{x, y, z + 1};
+         return new int[] { x, y, z };
+      } else if (!WorldUtilities.isBlockFullCube(world, x + 1, y, z)
+            && !WorldUtilities.isBlockFullCube(world, x + 1, y + 1, z)) {
+         return new int[] { x + 1, y, z };
+      } else if (!WorldUtilities.isBlockFullCube(world, x - 1, y, z)
+            && !WorldUtilities.isBlockFullCube(world, x - 1, y + 1, z)) {
+         return new int[] { x - 1, y, z };
+      } else if (!WorldUtilities.isBlockFullCube(world, x, y, z + 1)
+            && !WorldUtilities.isBlockFullCube(world, x, y + 1, z + 1)) {
+         return new int[] { x, y, z + 1 };
       } else {
-         return !WorldUtilities.isBlockFullCube(world, x, y, z - 1) && !WorldUtilities.isBlockFullCube(world, x, y + 1, z - 1) ? new int[]{x, y, z - 1} : null;
+         return !WorldUtilities.isBlockFullCube(world, x, y, z - 1)
+               && !WorldUtilities.isBlockFullCube(world, x, y + 1, z - 1) ? new int[] { x, y, z - 1 } : null;
       }
    }
 
@@ -419,12 +429,12 @@ public class MillCommonUtilities {
    public static String getShortPrice(int price) {
       String res = "";
       if (price >= 4096) {
-         res = (int)Math.floor(price / 4096) + "o ";
+         res = (int) Math.floor(price / 4096) + "o ";
          price %= 4096;
       }
 
       if (price >= 64) {
-         res = res + (int)Math.floor(price / 64) + "a ";
+         res = res + (int) Math.floor(price / 64) + "a ";
          price %= 64;
       }
 
@@ -435,7 +445,8 @@ public class MillCommonUtilities {
       return res.trim();
    }
 
-   public static MillCommonUtilities.WeightedChoice getWeightedChoice(List<? extends MillCommonUtilities.WeightedChoice> choices, EntityPlayer player) {
+   public static MillCommonUtilities.WeightedChoice getWeightedChoice(
+         List<? extends MillCommonUtilities.WeightedChoice> choices, EntityPlayer player) {
       int weightTotal = 0;
       List<Integer> weights = new ArrayList<>();
 
@@ -463,7 +474,7 @@ public class MillCommonUtilities {
 
    public static File getWorldSaveDir(World world) {
       ISaveHandler isavehandler = world.getSaveHandler();
-      return isavehandler instanceof SaveHandler ? ((SaveHandler)isavehandler).getWorldDirectory() : null;
+      return isavehandler instanceof SaveHandler ? ((SaveHandler) isavehandler).getWorldDirectory() : null;
    }
 
    public static BufferedWriter getWriter(File file) throws UnsupportedEncodingException, FileNotFoundException {
@@ -524,9 +535,9 @@ public class MillCommonUtilities {
             }
 
             advancementsSurvivalDone = advancementsSurvivalDone
-               + advancement.getKey()
-               + ":"
-               + MillConfigValues.advancementsSurvival.contains(advancement.getKey());
+                  + advancement.getKey()
+                  + ":"
+                  + MillConfigValues.advancementsSurvival.contains(advancement.getKey());
          }
 
          String advancementsCreativeDone = null;
@@ -539,33 +550,33 @@ public class MillCommonUtilities {
             }
 
             advancementsCreativeDone = advancementsCreativeDone
-               + advancement.getKey()
-               + ":"
-               + MillConfigValues.advancementsCreative.contains(advancement.getKey());
+                  + advancement.getKey()
+                  + ":"
+                  + MillConfigValues.advancementsCreative.contains(advancement.getKey());
          }
 
          String url = "http://millenaire.org/php/mlnuse.php?uid="
-            + MillConfigValues.randomUid
-            + "&mlnversion="
-            + "8.1.2"
-            + "&mode="
-            + mode
-            + "&lang="
-            + lang
-            + "&backuplang="
-            + MillConfigValues.fallback_language
-            + "&nbplayers="
-            + nbplayers
-            + "&os="
-            + os
-            + "&totalexp="
-            + totalexp
-            + "&advancementssurvival="
-            + advancementsSurvivalDone
-            + "&advancementscreative="
-            + advancementsCreativeDone
-            + "&validation="
-            + MillAdvancements.computeKey();
+               + MillConfigValues.randomUid
+               + "&mlnversion="
+               + "8.1.2"
+               + "&mode="
+               + mode
+               + "&lang="
+               + lang
+               + "&backuplang="
+               + MillConfigValues.fallback_language
+               + "&nbplayers="
+               + nbplayers
+               + "&os="
+               + os
+               + "&totalexp="
+               + totalexp
+               + "&advancementssurvival="
+               + advancementsSurvivalDone
+               + "&advancementscreative="
+               + advancementsCreativeDone
+               + "&validation="
+               + MillAdvancements.computeKey();
          if (Mill.proxy.getClientProfile() != null && MillConfigValues.sendAdvancementLogin) {
             url = url + "&login=" + Mill.proxy.getClientProfile().playerName;
          }
@@ -577,7 +588,7 @@ public class MillCommonUtilities {
    }
 
    public static int[] packLong(long nb) {
-      return new int[]{(int)(nb >> 32), (int)nb};
+      return new int[] { (int) (nb >> 32), (int) nb };
    }
 
    public static String parseItemString(Culture culture, String inputString) {
@@ -641,7 +652,7 @@ public class MillCommonUtilities {
             if (stack == ItemStack.EMPTY) {
                stack = new ItemStack(item, 1, meta);
                if (stack.getItem() instanceof InvItem.IItemInitialEnchantmens) {
-                  ((InvItem.IItemInitialEnchantmens)stack.getItem()).applyEnchantments(stack);
+                  ((InvItem.IItemInitialEnchantmens) stack.getItem()).applyEnchantments(stack);
                }
 
                if (toPut - nb <= stack.getMaxStackSize()) {
@@ -684,7 +695,8 @@ public class MillCommonUtilities {
          String itemName = nbttagcompound1.getString("item");
          String itemMod = nbttagcompound1.getString("itemmod");
          int itemMeta = nbttagcompound1.getInteger("meta");
-         inventory.put(InvItem.createInvItem(Item.getByNameOrId(itemMod + ":" + itemName), itemMeta), nbttagcompound1.getInteger("amount"));
+         inventory.put(InvItem.createInvItem(Item.getByNameOrId(itemMod + ":" + itemName), itemMeta),
+               nbttagcompound1.getInteger("amount"));
       }
    }
 
@@ -693,7 +705,7 @@ public class MillCommonUtilities {
    }
 
    public static long unpackLong(int nb1, int nb2) {
-      return (long)nb1 << 32 | nb2 & 4294967295L;
+      return (long) nb1 << 32 | nb2 & 4294967295L;
    }
 
    public static NBTTagList writeInventory(Map<InvItem, Integer> inventory) {
@@ -765,7 +777,8 @@ public class MillCommonUtilities {
             stream.close();
          } catch (Exception var2) {
             if (MillConfigValues.DEV) {
-               MillLog.error(null, "Exception when calling statistic service:" + var2.getMessage().substring(0, var2.getMessage().indexOf("?")));
+               MillLog.error(null, "Exception when calling statistic service:"
+                     + var2.getMessage().substring(0, var2.getMessage().indexOf("?")));
             }
          }
       }
@@ -819,8 +832,8 @@ public class MillCommonUtilities {
                   String releaseNotesEN = reader.readLine().trim();
                   String releaseNotesFR = reader.readLine().trim();
                   if (!MillConfigValues.mainLanguage.language.startsWith("fr")
-                     && !MillConfigValues.mainLanguage.language.startsWith("en")
-                     && !MillConfigValues.fallback_language.equals("fr")) {
+                        && !MillConfigValues.mainLanguage.language.startsWith("en")
+                        && !MillConfigValues.fallback_language.equals("fr")) {
                      ;
                   }
 
@@ -844,7 +857,9 @@ public class MillCommonUtilities {
 
       @Override
       public boolean equals(Object o) {
-         return o != null && o instanceof MillCommonUtilities.VillageInfo ? this.distance == ((MillCommonUtilities.VillageInfo)o).distance : false;
+         return o != null && o instanceof MillCommonUtilities.VillageInfo
+               ? this.distance == ((MillCommonUtilities.VillageInfo) o).distance
+               : false;
       }
 
       @Override

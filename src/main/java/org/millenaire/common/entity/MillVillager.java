@@ -1726,9 +1726,15 @@ public abstract class MillVillager extends EntityCreature implements IEntityAddi
             }
          }
 
+         System.out.println("[MillVillager DEBUG] interactSpecial - isSeller=" + this.isSeller()
+               + " controlledBy="
+               + (this.getTownHall() != null ? this.getTownHall().controlledBy(entityplayer) : "null TH"));
          if (this.isSeller() && !this.getTownHall().controlledBy(entityplayer)) {
+            System.out.println("[MillVillager DEBUG] Seller check passed. chestLocked=" + this.getTownHall().chestLocked
+                  + " reputation=" + this.getTownHall().getReputation(entityplayer));
             if (this.getTownHall().getReputation(entityplayer) < -1024 || !this.getTownHall().chestLocked) {
                if (!this.getTownHall().chestLocked) {
+                  System.out.println("[MillVillager DEBUG] Chest NOT locked - cannot trade");
                   ServerSender.sendTranslatedSentence(entityplayer, 'f', "ui.sellernotcurrently possible",
                         this.getName());
                   return false;
@@ -1738,16 +1744,24 @@ public abstract class MillVillager extends EntityCreature implements IEntityAddi
                return false;
             }
 
+            System.out.println("[MillVillager DEBUG] Searching for shop in " + this.getTownHall().getLocations().size()
+                  + " locations");
             for (BuildingLocation lx : this.getTownHall().getLocations()) {
+               double sellingDist = lx.getSellingPos() != null ? lx.getSellingPos().distanceTo(this) : 999;
+               double sleepingDist = lx.sleepingPos != null ? lx.sleepingPos.distanceTo(this) : 999;
+               System.out.println("[MillVillager DEBUG] Location: level=" + lx.level + " shop=" + lx.shop
+                     + " sellingDist=" + sellingDist + " sleepingDist=" + sleepingDist);
                if (lx.level >= 0
                      && lx.shop != null
                      && lx.shop.length() > 0
                      && (lx.getSellingPos() != null && lx.getSellingPos().distanceTo(this) < 5.0
                            || lx.sleepingPos.distanceTo(this) < 5.0)) {
+                  System.out.println("[MillVillager DEBUG] Found matching shop! Opening trade GUI");
                   ServerSender.displayVillageTradeGUI(entityplayer, lx.getBuilding(this.world));
                   return true;
                }
             }
+            System.out.println("[MillVillager DEBUG] No matching shop found within range");
          }
 
          if (this.isForeignMerchant()) {

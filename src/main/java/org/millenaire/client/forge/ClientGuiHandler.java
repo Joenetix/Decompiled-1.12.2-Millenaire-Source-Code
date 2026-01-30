@@ -29,10 +29,19 @@ public class ClientGuiHandler extends ServerGuiHandler {
             return GuiLockedChest.createGUI(world, x, y, z, player);
          }
       } else if (ID == 2) {
+         System.out.println("[ClientGuiHandler DEBUG] Trade GUI requested at " + x + "," + y + "," + z);
          Building building = Mill.clientWorld.getBuilding(new Point(x, y, z));
+         System.out
+               .println("[ClientGuiHandler DEBUG] Building found: " + (building != null ? building.getPos() : "null"));
+         if (building != null) {
+            System.out.println("[ClientGuiHandler DEBUG] TownHall: "
+                  + (building.getTownHall() != null ? building.getTownHall().getPos() : "null"));
+         }
          if (building != null && building.getTownHall() != null) {
+            System.out.println("[ClientGuiHandler DEBUG] Creating GuiTrade");
             return new GuiTrade(player, building);
          }
+         System.out.println("[ClientGuiHandler DEBUG] Failed to create GuiTrade - returning null");
       } else if (ID == 8) {
          long id = MillCommonUtilities.unpackLong(x, y);
          if (Mill.clientWorld.getVillagerById(id) != null) {
@@ -48,7 +57,7 @@ public class ClientGuiHandler extends ServerGuiHandler {
       } else if (ID == 16) {
          TileEntity at = world.getTileEntity(new BlockPos(x, y, z));
          if (at instanceof TileEntityFirePit) {
-            return new GuiFirePit(player, (TileEntityFirePit)at);
+            return new GuiFirePit(player, (TileEntityFirePit) at);
          }
       }
 

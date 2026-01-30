@@ -47,14 +47,14 @@ public class GuiTrade extends GuiContainer {
    private int buyingRow = 0;
    private final ContainerTrade container;
    private final Method drawSlotInventory;
-   private final Method drawItemStackInventory;
+
    ResourceLocation background = new ResourceLocation("millenaire", "textures/gui/trade.png");
 
    public GuiTrade(EntityPlayer player, Building building) {
       super(new ContainerTrade(player, building));
       this.drawSlotInventory = MillCommonUtilities.getDrawSlotInventoryMethod(this);
-      this.drawItemStackInventory = MillCommonUtilities.getDrawItemStackInventoryMethod(this);
-      this.container = (ContainerTrade)this.inventorySlots;
+
+      this.container = (ContainerTrade) this.inventorySlots;
       this.building = building;
       this.player = player;
       this.profile = building.mw.getProfile(player);
@@ -67,8 +67,8 @@ public class GuiTrade extends GuiContainer {
    public GuiTrade(EntityPlayer player, MillVillager merchant) {
       super(new ContainerTrade(player, merchant));
       this.drawSlotInventory = MillCommonUtilities.getDrawSlotInventoryMethod(this);
-      this.drawItemStackInventory = MillCommonUtilities.getDrawItemStackInventoryMethod(this);
-      this.container = (ContainerTrade)this.inventorySlots;
+
+      this.container = (ContainerTrade) this.inventorySlots;
       this.merchant = merchant;
       this.player = player;
       this.profile = merchant.mw.getProfile(player);
@@ -133,7 +133,8 @@ public class GuiTrade extends GuiContainer {
          this.fontRenderer.drawString(LanguageUtilities.string("ui.wesell") + ":", 8, 22, 4210752);
          this.fontRenderer.drawString(LanguageUtilities.string("ui.webuy") + ":", 8, 76, 4210752);
       } else {
-         this.fontRenderer.drawString(this.merchant.getName() + ": " + this.merchant.getNativeOccupationName(), 8, 6, 4210752);
+         this.fontRenderer.drawString(this.merchant.getName() + ": " + this.merchant.getNativeOccupationName(), 8, 6,
+               4210752);
          this.fontRenderer.drawString(LanguageUtilities.string("ui.isell") + ":", 8, 22, 4210752);
       }
 
@@ -149,11 +150,11 @@ public class GuiTrade extends GuiContainer {
       GlStateManager.disableDepth();
 
       for (int i = 0; i < this.buttonList.size(); i++) {
-         ((GuiButton)this.buttonList.get(i)).drawButton(this.mc, mouseX, mouseY, partialTicks);
+         ((GuiButton) this.buttonList.get(i)).drawButton(this.mc, mouseX, mouseY, partialTicks);
       }
 
       for (int j = 0; j < this.labelList.size(); j++) {
-         ((GuiLabel)this.labelList.get(j)).drawLabel(this.mc, mouseX, mouseY);
+         ((GuiLabel) this.labelList.get(j)).drawLabel(this.mc, mouseX, mouseY);
       }
 
       int i = this.guiLeft;
@@ -171,18 +172,18 @@ public class GuiTrade extends GuiContainer {
       GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
       for (int i1 = 0; i1 < this.inventorySlots.inventorySlots.size(); i1++) {
-         Slot slot = (Slot)this.inventorySlots.inventorySlots.get(i1);
+         Slot slot = (Slot) this.inventorySlots.inventorySlots.get(i1);
          if (slot.isEnabled()) {
             try {
                this.drawSlotInventory.invoke(this, slot);
-            } catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException var18) {
+            } catch (Exception var18) {
                MillLog.printException(var18);
             }
          }
 
          String problem = null;
          if (slot instanceof ContainerTrade.TradeSlot) {
-            ContainerTrade.TradeSlot tslot = (ContainerTrade.TradeSlot)slot;
+            ContainerTrade.TradeSlot tslot = (ContainerTrade.TradeSlot) slot;
             problem = tslot.isProblem();
             if (problem != null) {
                GlStateManager.disableLighting();
@@ -194,7 +195,7 @@ public class GuiTrade extends GuiContainer {
                GlStateManager.enableDepth();
             }
          } else if (slot instanceof ContainerTrade.MerchantSlot) {
-            ContainerTrade.MerchantSlot tslot = (ContainerTrade.MerchantSlot)slot;
+            ContainerTrade.MerchantSlot tslot = (ContainerTrade.MerchantSlot) slot;
             problem = tslot.isProblem();
             if (problem != null) {
                GlStateManager.disableLighting();
@@ -226,13 +227,12 @@ public class GuiTrade extends GuiContainer {
       this.drawGuiContainerForegroundLayer(mouseX, mouseY);
       RenderHelper.enableGUIStandardItemLighting();
       MinecraftForge.EVENT_BUS.post(new DrawForeground(this, mouseX, mouseY));
+
       InventoryPlayer inventoryplayer = this.mc.player.inventory;
       if (inventoryplayer.getItemStack() != null) {
-         try {
-            this.drawItemStackInventory.invoke(this, inventoryplayer.getItemStack(), i - 240 - 8, j - 240 - 8, currentProblemString);
-         } catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException var17) {
-            MillLog.printException(var17);
-         }
+         this.itemRender.renderItemAndEffectIntoGUI(inventoryplayer.getItemStack(), i - 240 - 8, j - 240 - 8);
+         this.itemRender.renderItemOverlayIntoGUI(this.fontRenderer, inventoryplayer.getItemStack(), i - 240 - 8,
+               j - 240 - 8, currentProblemString);
       }
 
       GlStateManager.popMatrix();
@@ -241,7 +241,7 @@ public class GuiTrade extends GuiContainer {
       RenderHelper.enableStandardItemLighting();
       if (inventoryplayer.getItemStack().getItem() == Items.AIR && hoveredSlot != null && hoveredSlot.getHasStack()) {
          if (hoveredSlot instanceof ContainerTrade.TradeSlot) {
-            ContainerTrade.TradeSlot tslot = (ContainerTrade.TradeSlot)hoveredSlot;
+            ContainerTrade.TradeSlot tslot = (ContainerTrade.TradeSlot) hoveredSlot;
             int price = 0;
             String priceText = null;
             int priceColour = 0;
@@ -257,9 +257,9 @@ public class GuiTrade extends GuiContainer {
 
             try {
                List<String> list = itemstack.getTooltip(
-                  this.mc.player, this.mc.gameSettings.advancedItemTooltips ? TooltipFlags.ADVANCED : TooltipFlags.NORMAL
-               );
-               if (!((ContainerTrade.TradeSlot)hoveredSlot).sellingSlot && this.profile.donationActivated) {
+                     this.mc.player,
+                     this.mc.gameSettings.advancedItemTooltips ? TooltipFlags.ADVANCED : TooltipFlags.NORMAL);
+               if (!((ContainerTrade.TradeSlot) hoveredSlot).sellingSlot && this.profile.donationActivated) {
                   list.add("§6" + LanguageUtilities.string("ui.donatinggoods"));
                   list.add(LanguageUtilities.string("ui.repgain", "" + price * 4));
                } else {
@@ -276,13 +276,13 @@ public class GuiTrade extends GuiContainer {
                MillLog.printException("Exception when rendering tooltip for stack: " + itemstack, var19);
             }
          } else if (hoveredSlot instanceof ContainerTrade.MerchantSlot) {
-            ContainerTrade.MerchantSlot tslot = (ContainerTrade.MerchantSlot)hoveredSlot;
+            ContainerTrade.MerchantSlot tslot = (ContainerTrade.MerchantSlot) hoveredSlot;
             String price = MillCommonUtilities.getShortPrice(tslot.good.getCalculatedSellingPrice(this.merchant));
             int priceColour = MillCommonUtilities.getPriceColourMC(tslot.good.getCalculatedSellingPrice(this.merchant));
             ItemStack itemstack = hoveredSlot.getStack();
             List<String> listx = itemstack.getTooltip(
-               this.mc.player, this.mc.gameSettings.advancedItemTooltips ? TooltipFlags.ADVANCED : TooltipFlags.NORMAL
-            );
+                  this.mc.player,
+                  this.mc.gameSettings.advancedItemTooltips ? TooltipFlags.ADVANCED : TooltipFlags.NORMAL);
             listx.add("§" + Integer.toHexString(priceColour) + price);
             if (currentProblemString != null) {
                listx.add("§4" + currentProblemString);
@@ -303,12 +303,14 @@ public class GuiTrade extends GuiContainer {
          if (dx >= 8 && dx <= 24) {
             String toolTip = LanguageUtilities.string("ui.trade_buying");
             int stringlength = this.fontRenderer.getStringWidth(toolTip);
-            this.drawGradientRect(mouseX + 5, mouseY - 3, mouseX + stringlength + 10, mouseY + 8 + 3, -1073741824, -1073741824);
+            this.drawGradientRect(mouseX + 5, mouseY - 3, mouseX + stringlength + 10, mouseY + 8 + 3, -1073741824,
+                  -1073741824);
             this.fontRenderer.drawString(toolTip, mouseX + 8, mouseY, 16777215);
          } else if (dx >= 24 && dx <= 40) {
             String toolTip = LanguageUtilities.string("ui.trade_donation");
             int stringlength = this.fontRenderer.getStringWidth(toolTip);
-            this.drawGradientRect(mouseX + 5, mouseY - 3, mouseX + stringlength + 10, mouseY + 8 + 3, -1073741824, -1073741824);
+            this.drawGradientRect(mouseX + 5, mouseY - 3, mouseX + stringlength + 10, mouseY + 8 + 3, -1073741824,
+                  -1073741824);
             this.fontRenderer.drawString(toolTip, mouseX + 8, mouseY, 16777215);
          }
       }
@@ -325,7 +327,8 @@ public class GuiTrade extends GuiContainer {
    }
 
    protected void handleMouseClick(Slot slotIn, int slotId, int mouseButton, ClickType type) {
-      if (slotIn == null || slotIn instanceof ContainerTrade.TradeSlot || slotIn instanceof ContainerTrade.MerchantSlot) {
+      if (slotIn == null || slotIn instanceof ContainerTrade.TradeSlot
+            || slotIn instanceof ContainerTrade.MerchantSlot) {
          if (slotIn != null && slotIn.getStack() != null) {
             super.handleMouseClick(slotIn, slotId, mouseButton, type);
          }
@@ -396,9 +399,9 @@ public class GuiTrade extends GuiContainer {
       int pos = 0;
 
       for (Object o : this.container.inventorySlots) {
-         Slot slot = (Slot)o;
+         Slot slot = (Slot) o;
          if (slot instanceof ContainerTrade.TradeSlot) {
-            ContainerTrade.TradeSlot tradeSlot = (ContainerTrade.TradeSlot)slot;
+            ContainerTrade.TradeSlot tradeSlot = (ContainerTrade.TradeSlot) slot;
             if (tradeSlot.sellingSlot == selling) {
                tradeSlot.yPos += 18 * change;
                if (pos / 13 >= row && pos / 13 <= row + 1) {
@@ -412,7 +415,7 @@ public class GuiTrade extends GuiContainer {
                pos++;
             }
          } else if (slot instanceof ContainerTrade.MerchantSlot && selling) {
-            ContainerTrade.MerchantSlot merchantSlot = (ContainerTrade.MerchantSlot)slot;
+            ContainerTrade.MerchantSlot merchantSlot = (ContainerTrade.MerchantSlot) slot;
             merchantSlot.yPos += 18 * change;
             if (pos / 13 >= row && pos / 13 <= row + 1) {
                if (merchantSlot.xPos < 0) {
