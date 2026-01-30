@@ -1,12 +1,11 @@
 # Millénaire 1.12.2 - Decompiled Source Code
 
-<<<<<<< HEAD
-=======
+
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.12.2-green.svg)](https://minecraft.net)
 [![Forge](https://img.shields.io/badge/Forge-14.23.5.2860-orange.svg)](https://files.minecraftforge.net/)
 [![License](https://img.shields.io/badge/License-See%20Original-blue.svg)](http://millenaire.org)
 
->>>>>>> f5d0cad (Updates to MillVillager, Trade and Puja GUIs)
+
 Fully decompiled and fixed source code for the **Millénaire** mod for Minecraft 1.12.2.
 
 Millénaire is a village mod that adds procedurally generated NPC villages from various cultures (Norman, Indian, Japanese, Mayan, Byzantine, Inuit, and Seljuk) that grow and evolve over time.
@@ -22,11 +21,8 @@ Millénaire is a village mod that adds procedurally generated NPC villages from 
 
 ## Bug Fixes
 
-<<<<<<< HEAD
+
 Things that needed fixing after I originally decompiled:
-=======
-This version includes critical fixes not present in the original release:
->>>>>>> f5d0cad (Updates to MillVillager, Trade and Puja GUIs)
 
 ### Invisible Villagers Fix
 - **Root Cause**: Multiple `MillWorldData` instances caused villager records to be registered in one instance but checked in another
@@ -36,6 +32,11 @@ This version includes critical fixes not present in the original release:
 - Fixed resource loading errors for models and textures
 - Added missing blockstate configurations
 - Resolved entity registration issues
+
+This version includes critical fixes not present in the original release:
+-Trading GUIs were not being properly triggered when inetracting with villagers
+(Updates to MillVillager, Trade and Puja GUIs)
+
 
 ## Building
 
@@ -83,6 +84,7 @@ src/main/java/org/millenaire/
 
 - **Original Mod**: [Millénaire](http://millenaire.org) by Kinniken
 - **Decompilation & Fixes**: Joenetix
+- **Playtesting**: lTwoTimesl
 
 ## Disclaimer
 
