@@ -451,15 +451,4 @@ public class Mill {
             event.registerServerCommand(new CommandSwitchVillageControl());
       }
 
-      @SubscribeEvent
-      public void onWorldLoad(net.minecraftforge.event.world.WorldEvent.Load event) {
-            if (!event.getWorld().isRemote) {
-                  MillWorldData worldData = new MillWorldData(event.getWorld());
-                  worldData.loadData();
-                  serverWorlds.add(worldData);
-                  System.out.println(
-                              "Millenaire: Registered MillWorldData for world "
-                                          + event.getWorld().getWorldInfo().getWorldName());
-            }
-      }
 }

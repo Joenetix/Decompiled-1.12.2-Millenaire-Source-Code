@@ -2487,6 +2487,12 @@ public abstract class MillVillager extends EntityCreature implements IEntityAddi
       }
 
       this.updateClothTexturePath();
+
+      // Register villager in global list after loading from NBT
+      // This ensures the villager is tracked by MillWorldData after world reload
+      if (!this.world.isRemote && this.mw != null && this.getVillagerId() > 0) {
+         this.mw.registerVillager(this.getVillagerId(), this);
+      }
    }
 
    public void readFromNBT(NBTTagCompound compound) {

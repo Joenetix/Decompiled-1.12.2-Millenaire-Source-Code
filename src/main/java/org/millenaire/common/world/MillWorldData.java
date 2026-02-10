@@ -399,10 +399,23 @@ public class MillWorldData {
       File buildingsDir = new File(this.millenaireDir, "buildings");
       if (!buildingsDir.exists()) {
          buildingsDir.mkdir();
+         MillLog.major(this, "Created buildings directory: " + buildingsDir.getAbsolutePath());
       }
 
-      for (File file : buildingsDir.listFiles(new MillCommonUtilities.ExtFileFilter("gz"))) {
+      File[] files = buildingsDir.listFiles(new MillCommonUtilities.ExtFileFilter("gz"));
+      if (files == null) {
+         MillLog.error(this, "Failed to list files in buildings directory: " + buildingsDir.getAbsolutePath());
+         return;
+      }
+
+      MillLog.major(this,
+            "Found " + (files != null ? files.length : 0) + " matching files in " + buildingsDir.getAbsolutePath());
+
+      for (File file : files) {
          try {
+            // Debug log for each file
+            // System.out.println("Loading building file: " + file.getName());
+
             FileInputStream fileinputstream = new FileInputStream(file);
             NBTTagCompound nbttagcompound = CompressedStreamTools.readCompressed(fileinputstream);
             NBTTagList nbttaglist = nbttagcompound.getTagList("buildings", 10);
@@ -420,14 +433,13 @@ public class MillWorldData {
          }
       }
 
-      if (MillConfigValues.LogHybernation >= 1) {
-         for (Building b : this.buildings.values()) {
-            MillLog.major(null, b + " - " + b.culture);
-         }
-
-         MillLog.major(this,
-               "Loaded " + this.buildings.size() + " in " + (System.currentTimeMillis() - startTime) + " ms.");
+      // Always log result regardless of config
+      for (Building b : this.buildings.values()) {
+         MillLog.major(null, "Loaded Building: " + b + " - " + b.culture);
       }
+
+      MillLog.major(this,
+            "Loaded " + this.buildings.size() + " buildings in " + (System.currentTimeMillis() - startTime) + " ms.");
    }
 
    public void loadData() {
@@ -863,6 +875,7 @@ public class MillWorldData {
       boolean registeredHouse = false;
       boolean registeredTH = false;
       this.villagerRecords.put(villagerRecord.getVillagerId(), villagerRecord);
+
       if (villagerRecord.getTownHall() != null) {
          villagerRecord.getTownHall().registerVillagerRecord(villagerRecord);
          registeredTH = true;
@@ -944,7 +957,7 @@ public class MillWorldData {
 
          for (Building b : this.buildings.values()) {
             if (b.isTownhall && b.isActive) {
-               b.saveTownHall("world save");
+               b.saveTownHallSync("world save");
             }
          }
       }

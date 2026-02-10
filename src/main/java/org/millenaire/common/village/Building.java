@@ -176,6 +176,7 @@ public class Building {
    private long lastFailedProjectLocationSearch = 0L;
    public long lastPathingUpdate;
    private long lastSaved = 0L;
+   private long gracePeriodStart = 0L;
    public long lastVillagerRecordsRepair = 0L;
    public BuildingLocation location;
    public VillagerRecord merchantRecord = null;
@@ -1143,7 +1144,12 @@ public class Building {
       }
 
       if (this.isTownhall) {
-         if (this.chestLocked && nbLiveDefenders == 0) {
+         // Grace period: don't unlock chests within 200 ticks (10 seconds) of world load
+         // This allows VillagerRecords time to link to Buildings after reload
+         boolean inGracePeriod = this.gracePeriodStart > 0L &&
+               (this.world.getTotalWorldTime() - this.gracePeriodStart) < 200L;
+
+         if (this.chestLocked && nbLiveDefenders == 0 && !inGracePeriod) {
             this.unlockAllChests();
             ServerSender.sendTranslatedSentenceInRange(
                   this.world, this.getPos(), MillConfigValues.BackgroundRadius, '4', "ui.allchestsunlocked",
@@ -5068,12 +5074,32 @@ public class Building {
    }
 
    private void respawnVillagersIfNeeded() throws MillLog.MillenaireException {
+      // DEBUG: Trace entry of respawn logic
+      MillLog.major(this, "Checking respawn necessity for " + this.getVillagerRecords().size() + " records.");
+
       int time = (int) (this.world.getWorldTime() % 24000L);
       boolean resurect = time >= 13000 && time < 13100;
 
       for (VillagerRecord vr : this.getVillagerRecords().values()) {
          MillVillager foundVillager = this.mw.getVillagerById(vr.getVillagerId());
+
+         // Fix: Check if the villager object exists but is actually dead or unloaded
+         // (stale cache)
+         if (foundVillager != null) {
+            boolean isDead = foundVillager.isDead;
+            boolean isUnloaded = foundVillager.world != this.world
+                  || this.world.getEntityByID(foundVillager.getEntityId()) != foundVillager;
+
+            if (isDead || isUnloaded) {
+               MillLog.major(this, "Villager found in cache implies dead/unloaded (Dead: " + isDead + ", Unloaded: "
+                     + isUnloaded + "): " + vr.getNameKey());
+               foundVillager = null;
+            }
+         }
+
          if (foundVillager == null) {
+            MillLog.major(this, "Villager missing/dead: " + vr.getNameKey() + " (ID: " + vr.getVillagerId() + ")"); // DEBUG
+
             boolean respawn = false;
             if (!vr.flawedRecord) {
                if (vr.raidingVillage) {
@@ -5082,7 +5108,12 @@ public class Building {
                   }
                } else if (!vr.awayraiding && !vr.awayhired && !vr.getType().noResurrect && (!vr.killed || resurect)) {
                   respawn = true;
+               } else {
+                  MillLog.major(this, "No respawn: awayraiding=" + vr.awayraiding + ", awayhired=" + vr.awayhired
+                        + ", killed=" + vr.killed + ", resurrect=" + resurect); // DEBUG
                }
+            } else {
+               MillLog.major(this, "No respawn: Flawed record for " + vr.getNameKey()); // DEBUG
             }
 
             if (respawn) {
@@ -5162,6 +5193,20 @@ public class Building {
       if (!this.world.isRemote && this.saveWorker == null) {
          this.saveWorker = new Building.SaveWorker(reason);
          this.saveWorker.start();
+      }
+   }
+
+   public void saveTownHallSync(String reason) {
+      if (!this.world.isRemote) {
+         if (this.saveWorker != null) {
+            try {
+               this.saveWorker.join(5000);
+            } catch (InterruptedException e) {
+               // Ignore
+            }
+         }
+         Building.SaveWorker worker = new Building.SaveWorker(reason);
+         worker.run();
       }
    }
 
@@ -6219,6 +6264,12 @@ public class Building {
    }
 
    private void updateTownHall() throws MillLog.MillenaireException {
+      // Set grace period start on first tick after loading (prevents premature chest
+      // unlock)
+      if (this.gracePeriodStart == 0L) {
+         this.gracePeriodStart = this.world.getTotalWorldTime();
+      }
+
       if (this.getVillagerRecords().size() > 0) {
          this.updateWorldInfo();
       }
@@ -6767,6 +6818,15 @@ public class Building {
             }
 
             nbttagcompound.setTag("tags", nbttaglist);
+
+            nbttaglist = new NBTTagList();
+            for (VillagerRecord vr : this.getVillagerRecords().values()) {
+               NBTTagCompound vrTag = new NBTTagCompound();
+               vr.write(vrTag, "vr");
+               nbttaglist.appendTag(vrTag);
+            }
+            nbttagcompound.setTag("villagersrecords", nbttaglist);
+
             this.resManager.writeToNBT(nbttagcompound);
             if (this.marvelManager != null) {
                this.marvelManager.writeToNBT(nbttagcompound);
@@ -6967,20 +7027,67 @@ public class Building {
                   buildingsDir.mkdir();
                }
 
-               File tempFile = new File(buildingsDir, Building.this.getPos().getPathString() + "_temp.gz");
+               File tempFile = new File(buildingsDir, Building.this.getPos().getPathString() + "_temp.tmp");
+               FileOutputStream fileoutputstream = null;
 
                try {
-                  FileOutputStream fileoutputstream = new FileOutputStream(tempFile);
+                  fileoutputstream = new FileOutputStream(tempFile);
                   CompressedStreamTools.writeCompressed(mainTag, fileoutputstream);
                   fileoutputstream.flush();
-                  fileoutputstream.close();
-                  Path finalPath = new File(buildingsDir, Building.this.getPos().getPathString() + ".gz").toPath();
-                  Files.move(tempFile.toPath(), finalPath, StandardCopyOption.REPLACE_EXISTING);
                } catch (IOException var12) {
                   MillLog.printException(var12);
+               } finally {
+                  if (fileoutputstream != null) {
+                     try {
+                        fileoutputstream.close();
+                     } catch (IOException e) {
+                        e.printStackTrace();
+                     }
+                  }
                }
 
-               if (MillConfigValues.LogHybernation >= 1) {
+               Path finalPath = new File(buildingsDir, Building.this.getPos().getPathString() + ".gz").toPath();
+               Path tempPath = tempFile.toPath();
+
+               // Robust file move with retry and fallback
+               int attempts = 0;
+               boolean success = false;
+               int maxAttempts = 20; // 20 * 200ms = 4 seconds max wait
+
+               while (attempts < maxAttempts && !success) {
+                  try {
+                     // Try atomic move first
+                     Files.move(tempPath, finalPath, StandardCopyOption.REPLACE_EXISTING);
+                     success = true;
+                  } catch (IOException e) {
+                     attempts++;
+                     if (attempts >= maxAttempts) {
+                        // If move fails, try copy and delete as last resort
+                        try {
+                           Files.copy(tempPath, finalPath, StandardCopyOption.REPLACE_EXISTING);
+                           Files.delete(tempPath);
+                           success = true;
+                           MillLog.major(Building.this,
+                                 "Recovered from file lock by using copy+delete for " + Building.this.getPos());
+                        } catch (IOException copyEx) {
+                           MillLog.printException("Failed to move AND copy building save file for "
+                                 + Building.this.getPos() + " after " + maxAttempts + " attempts. Last failure:", e);
+                        }
+                     } else {
+                        try {
+                           Thread.sleep(200);
+                           // Force GC regarding occasionally held handles (rare but possible on Windows)
+                           if (attempts % 5 == 0) {
+                              System.gc();
+                           }
+                        } catch (InterruptedException ie) {
+                           // Ignore
+                        }
+                     }
+                  }
+               }
+
+               if (MillConfigValues.LogHybernation >= 1 && success) {
                   MillLog.major(
                         Building.this,
                         "Saved "
@@ -6994,6 +7101,7 @@ public class Building {
                               + ").");
                }
 
+               // Even if save failed, we reset flags to avoid infinite save loops
                Building.this.lastSaved = Building.this.world.getWorldTime();
                Building.this.saveNeeded = false;
                Building.this.saveReason = null;
